@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/res/icon/android/hdpi.png",
+    "icon": "./assets/images/uit-ctf-time.png",
     "splash": {
-      "image": "./assets/images/res/screen/android/splash-port-hdpi.png",
+      "image": "./assets/images/splash-port-xhdpi.png",
       "resizeMode": "cover",
       "backgroundColor": "#363636"
     },
