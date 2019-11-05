@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { lightBackground, extraLightBackground, darkText, lightText, emerald } from '../../constants/Colors';
 import Button from '../../components/Button';
-import { LineIcon } from 'react-native-vector-icons';
+import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 const { width } = Dimensions.get('window');
 const kPosterImageHeight = 480;
