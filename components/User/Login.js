@@ -28,7 +28,7 @@ export default class App extends Component {
 
     const config = {
         method: 'POST',
-        url: 'http://192.168.0.103:5000/auth/login',
+        url: 'https://uit-ctf-time.herokuapp.com/auth/login',
         header: {'User-Agent': 'UIT CTF time Android app'},
         data: {
             email: "admin@gmail.com",
@@ -53,7 +53,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image source={require('../../assets/images/logo/logo.png')} />
+        <Image source={require('../../assets/images/uit-ctf-time.png')} />
         <Input
             label={'Email'}
             value={this.state.email}

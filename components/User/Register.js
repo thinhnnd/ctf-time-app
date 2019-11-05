@@ -10,28 +10,29 @@ import {
 } from 'react-native';
 import {Input, Button} from 'react-native-elements';
  
-export default class App extends Component {
+export default class Register extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
       email: '',
+      name: '',
       password: '',
       passwordRetype: '',
       dateOfBirth: new Date(''),
     };
   }
   
-  onLogin() {
-    const { email, password } = this.state;
+  onRegister() {
+    const { email, name, password, passwordRetype, dateOfBirth } = this.state;
 
-    Alert.alert('Credentials', `${email} + ${password}`);
+    Alert.alert('Register ', `${email} + ${password}`);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Image source={require('../../assets/images/logo/logo.png')} />
+        <Image source={require('../../assets/images/uit-ctf-time.png')} />
         <Input
             label={'Email'}
             value={this.state.username}
@@ -77,7 +78,7 @@ export default class App extends Component {
             type="outline"
             title={'Login 21'}
             style={styles.input}
-            onPress={this.onLogin.bind(this)}
+            onPress={this.onRegister.bind(this)}
             
         />
       </View>

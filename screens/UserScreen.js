@@ -1,10 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
+import Register from '../components/User/Register';
 
 export default function UserScreen(props) {
   return (
     <ScrollView style={styles.container}>
-        <Text>This is User Screen</Text>
+        <Register />
     </ScrollView>
   );
 }
