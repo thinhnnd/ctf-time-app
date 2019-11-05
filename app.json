@@ -14,7 +14,7 @@
     "icon": "./assets/images/res/icon/android/hdpi.png",
     "splash": {
       "image": "./assets/images/res/screen/android/splash-port-hdpi.png",
-      "resizeMode": "center",
+      "resizeMode": "cover",
       "backgroundColor": "#363636"
     },
     "updates": {
