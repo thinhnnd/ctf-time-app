@@ -28,7 +28,7 @@ export default class App extends Component {
 
     const config = {
         method: 'POST',
-        url: 'http://192.168.0.103:5000/auth/login',
+        url: 'https://uit-ctf-time.herokuapp.com/auth/login',
         header: {'User-Agent': 'UIT CTF time Android app'},
         data: {
             email: "admin@gmail.com",
