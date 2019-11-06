@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView 
 } from 'react-native';
 import {Input, Button} from 'react-native-elements';
+import API_HELPERS from '../../api';
  
 export default class Register extends Component {
   constructor(props) {
@@ -23,8 +24,10 @@ export default class Register extends Component {
     };
   }
   
-  onRegister() {
-    const { email, name, password, passwordRetype, dateOfBirth } = this.state;
+  async onRegister() {
+    const userInfo = { email, name, password, passwordRetype, dateOfBirth } = this.state;
+    res = await API_HELPERS.registerUser(userInfo);
+    console.log(res.data);
 
     Alert.alert('Register ', `${email} + ${password}`);
   }

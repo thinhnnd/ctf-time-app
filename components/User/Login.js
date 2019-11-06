@@ -10,44 +10,45 @@ import {
 } from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import axios from 'axios';
-import {AsyncStorage} from 'react-native';
+import API_HELPERS from '../../api';
+import DATABASE_HELPERS from '../../database_helpers';
 
- 
-export default class App extends Component {
+import { AsyncStorage } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+
+export default class Login extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
-      username: '',
-      password: '',
+        email: '',
+        password: '',
     };
+    this.onLogin = this.onLogin.bind(this);
   }
   
   async onLogin() {
-    const { email, password } = this.state;
-
-    const config = {
-        method: 'POST',
-        url: 'https://uit-ctf-time.herokuapp.com/auth/login',
-        header: {'User-Agent': 'UIT CTF time Android app'},
-        data: {
-            email: "admin@gmail.com",
-	        password: "admin123"
-        }
-    }
-    try {
-        let res = await axios.request(config);
+    const user =  { email, password } = this.state;
+    console.log(user);
+    // API_HELPERS.getAllEvents()
+    //         .then(events => {
+    //             this.setState({ events: events, isLoading: false });
+    //         })
+    //         .catch(err => console.log(err));
+    API_HELPERS.loginUser(email, password).then( (res)=> {
         console.log(res.data);
-        let result = await AsyncStorage.setItem('@MySuperStore:user_info', JSON.stringify(res.data))
-        console.log('result', result);
+        DATABASE_HELPERS.storeUserToken(res.data.token);
+    }).catch( (err) => {
+        console.log(err);
+    })
+  }
 
-        const value = await AsyncStorage.getItem('@MySuperStore:user_info');
-        if(!value) {
-            console.log(value);
-        }
-    } catch (err) {
-        console.log(err)
-    }
+  async saveUserData(token) {
+      try {
+        await SecureStore.setItemAsync('token', JSON.stringify(token));
+      } catch (err) {
+        console.log(err);
+      }
   }
 
   render() {
@@ -78,7 +79,7 @@ export default class App extends Component {
             type="outline"
             title="Login"
             titleStyle={styles.button}
-            onPress={this.onLogin.bind(this)}
+            onPress={this.onLogin}
         />
       </View>
     );

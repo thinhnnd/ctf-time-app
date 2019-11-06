@@ -1,16 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
+import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import Login from '../components/User/Login';
 
-export default function TeamScreen(props) {
-
+export default function LoginScreen() {
   return (
     <ScrollView style={styles.container}>
-      <Text>Please login</Text>
-      <Button 
-      title="Go to Details"
-      onPress={() => this.props.navigation.navigate('Login')}
-      />
+      <Login />
     </ScrollView>
   );
 }
