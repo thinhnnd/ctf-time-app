@@ -2,16 +2,16 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import Login from '../components/User/Login';
 
-export default function LoginScreen() {
+export default function LoginScreen(props) {
   return (
     <ScrollView style={styles.container}>
-      <Login />
+      <Login navigation={props.navigation} />
     </ScrollView>
   );
 }
 
-TeamScreen.navigationOptions = {
-  title: 'Team',
+LoginScreen.navigationOptions = {
+  title: 'Login',
 };
 
 const styles = StyleSheet.create({
