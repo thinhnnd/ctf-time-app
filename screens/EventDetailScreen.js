@@ -1,4 +1,5 @@
 import React from 'react';
+import { Avatar } from 'react-native-elements';
 import CTFEventDetail from '../components/CTFEvent/CTFEventDetail';
 
 export default class EventDetailScreen extends React.Component {

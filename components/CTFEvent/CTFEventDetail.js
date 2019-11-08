@@ -9,6 +9,7 @@ import {
     Linking,
     Alert
 } from 'react-native';
+import { Avatar } from 'react-native-elements';
 import { lightBackground, extraLightBackground, darkText, lightText, emerald } from '../../constants/Colors';
 import Button from '../../components/Button';
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
@@ -26,6 +27,9 @@ const Duration = ({ event }) => (
         <Text style={styles.optionsButtonText}>Finish at {new Date(event.finish).toGMTString()} </Text>
     </View>
 )
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const IMAGE_SIZE = SCREEN_WIDTH - 40;
 
 export default class CTFEventDetail extends Component {
     constructor(props) {
@@ -99,16 +103,27 @@ export default class CTFEventDetail extends Component {
                         [{ nativeEvent: { contentOffset: { y: this._scrollY } } }]
                     )}
                 >
-                    <ScrollView
-                        horizontal={true}
-                        contentContainerStyle={{}}
-                        showsHorizontalScrollIndicator={false}
-                        snapToInterval={width}
-                        snapToAlignment={"center"}
-                        snapToStart={true}
-                        decelerationRate="fast">
-                        <Image style={{ height: kPosterImageHeight, width: width, marginTop: 0 }} source={{ uri: event.logo, crop: { left: 10, top: 50, width: 20, height: 40 } }} />
-                    </ScrollView>
+                    <View
+
+                        containerStyle={{
+                            flex: 3,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Avatar
+                            title={event.title[0]}
+                            source={{ uri: event.logo }}
+                            center
+                            style={{
+                                width: IMAGE_SIZE,
+                                height: IMAGE_SIZE,
+                                borderRadius: 10,
+                                alignSelf: 'center'
+                            }}
+                        />
+                    </View>
                     {this.actionButtonGroup()}
                     <View style={styles.eventDescription}>
                         <Text style={styles.title}> {event.title} </Text>
