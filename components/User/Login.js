@@ -36,12 +36,23 @@ export default class Login extends Component {
     //             this.setState({ events: events, isLoading: false });
     //         })
     //         .catch(err => console.log(err));
-    API_HELPERS.loginUser(email, password).then( (res)=> {
-        console.log(res.data);
-        DATABASE_HELPERS.storeUserToken(res.data.token);
-    }).catch( (err) => {
+    // API_HELPERS.loginUser(email, password).then( (res)=> {
+    //     console.log(res.data);
+    //     DATABASE_HELPERS.storeUserToken(res.data.token);
+    // }).catch( (err) => {
+    //     console.log(err);
+    // })
+    try {
+
+        let result = await API_HELPERS.loginUser(email, password);
+        console.log(result.data);
+        await DATABASE_HELPERS.storeUserToken(result.data.token);
+    }
+
+    catch (err) {
         console.log(err);
-    })
+    }
+
   }
 
   async saveUserData(token) {

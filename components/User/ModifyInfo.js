@@ -61,41 +61,14 @@ export default class Register extends Component {
 
                     />
 
-                    <Input
-                        label={'Password'}
-                        value={this.state.password}
-                        onChangeText={(password) => this.setState({ password })}
-                        placeholder={'password'}
-                        secureTextEntry={true}
-                        inputStyle={styles.input}
-                        inputContainerStyle={styles.inputWrapper}
-                    />
-
-
-                    <Input
-                        label={'Password retype'}
-                        value={this.state.passwordRetype}
-                        onChangeText={(passwordRetype) => this.setState({ passwordRetype })}
-                        placeholder={'password retype'}
-                        secureTextEntry={true}
-                        inputStyle={styles.input}
-                        inputContainerStyle={styles.inputWrapper}
-                    />
-
                     <Button
-                        title={'REGISTER'}
+                        title={'Lưu'}
                         style={styles.input}
                         onPress={this.onRegister.bind(this)}
 
                     />
 
-                    <Text>Already have an account?</Text>
-
-                    <Button
-                        type="outline"
-                        title="LOGIN"
-                        titleStyle={styles.button}
-                        onPress={() => this.props.navigation.navigate('Register', { title: 'Register ' })} />
+                   
                 </View>
         );
     }

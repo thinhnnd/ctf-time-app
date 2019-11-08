@@ -11,6 +11,7 @@ import CTFEventScreen from '../screens/CTFEventScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import UserModifyScreen from '../screens/UserModifyScreen';
 
 
 const config = Platform.select({
@@ -64,8 +65,8 @@ const UserStack = createStackNavigator(
         User: UserScreen,
         Login: LoginScreen,
         Register: RegisterScreen,
+        ModifyUserInfo: UserModifyScreen 
     },
-    config
 );
 
 UserStack.navigationOptions = {
@@ -74,6 +75,9 @@ UserStack.navigationOptions = {
         <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
     ),
 };
+
+
+
 
 UserStack.path = '';
 
