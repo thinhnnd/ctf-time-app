@@ -6,6 +6,7 @@ import {
     View, 
     StyleSheet, 
     Image,
+    Text,
     KeyboardAvoidingView 
 } from 'react-native';
 import {Input, Button} from 'react-native-elements';
@@ -76,11 +77,18 @@ export default class Login extends Component {
         />
         
         <Button
-            type="outline"
             title="Login"
             titleStyle={styles.button}
             onPress={this.onLogin}
         />
+
+        <Text>Don't have any account?</Text>
+
+        <Button
+          type="outline"
+          title="REGISTER"
+          titleStyle={styles.button}
+          onPress={() => this.props.navigation.navigate('Register', { title: 'Register ' })} />
       </View>
     );
   }

@@ -8,8 +8,8 @@ export default function TeamScreen(props) {
     <ScrollView style={styles.container}>
       <Text>Please login</Text>
       <Button 
-      title="Go to Details"
-      onPress={() => this.props.navigation.navigate('Login')}
+      title="LOGIN/REGISTER"
+      onPress={() => props.navigation.navigate('Login')}
       />
     </ScrollView>
   );

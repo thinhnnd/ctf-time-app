@@ -9,6 +9,10 @@ import TeamScreen from '../screens/TeamScreen';
 import UserScreen from '../screens/UserScreen';
 import CTFEventScreen from '../screens/CTFEventScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+
+
 const config = Platform.select({
     web: { headerMode: 'screen' },
     default: {},
@@ -40,6 +44,8 @@ HomeStack.path = '';
 const TeamStack = createStackNavigator(
     {
         Team: TeamScreen,
+        Login: LoginScreen,
+        Register: RegisterScreen,
     },
     config
 );
@@ -56,6 +62,8 @@ TeamStack.path = '';
 const UserStack = createStackNavigator(
     {
         User: UserScreen,
+        Login: LoginScreen,
+        Register: RegisterScreen,
     },
     config
 );

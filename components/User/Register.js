@@ -1,110 +1,119 @@
 import React, { Component } from 'react';
 import { Header } from 'react-navigation';
-import { 
+import {
     Alert,
-    TextInput, 
-    View, 
-    StyleSheet, 
+    TextInput,
+    View,
+    StyleSheet,
     Image,
-    KeyboardAvoidingView 
+    Text,
+    KeyboardAvoidingView,
+    ScrollView,
 } from 'react-native';
-import {Input, Button} from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import API_HELPERS from '../../api';
- 
+
 export default class Register extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      email: '',
-      name: '',
-      password: '',
-      passwordRetype: '',
-      dateOfBirth: new Date(''),
-    };
-  }
-  
-  async onRegister() {
-    const userInfo = { email, name, password, passwordRetype, dateOfBirth } = this.state;
-    res = await API_HELPERS.registerUser(userInfo);
-    console.log(res.data);
+    constructor(props) {
+        super(props);
 
-    Alert.alert('Register ', `${email} + ${password}`);
-  }
+        this.state = {
+            email: '',
+            name: '',
+            password: '',
+            passwordRetype: '',
+            dateOfBirth: new Date(''),
+        };
+    }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image source={require('../../assets/images/uit-ctf-time.png')} />
-        <Input
-            label={'Email'}
-            value={this.state.username}
-            placeholder={'example@address.com'}
-            onChangeText={(username) => this.setState({ username })}
-            inputStyle={styles.input}
-            inputContainerStyle={styles.inputWrapper}
+    async onRegister() {
+        const userInfo = { email, name, password, passwordRetype, dateOfBirth } = this.state;
+        res = await API_HELPERS.registerUser(userInfo);
+        console.log(res.data);
 
-        />
+        Alert.alert('Register ', `${email} + ${password}`);
+    }
 
-        <Input
-            label={'Full Name'}
-            value={this.state.name}
-            placeholder={'Tran Van B'}
-            onChangeText={(name) => this.setState({ name })}
-            inputStyle={styles.input}
-            inputContainerStyle={styles.inputWrapper}
+    render() {
+        return (
+                <View style={styles.container} >
+                    <Image source={require('../../assets/images/uit-ctf-time.png')} />
+                    <Input
+                        label={'Email'}
+                        value={this.state.username}
+                        placeholder={'example@address.com'}
+                        onChangeText={(username) => this.setState({ username })}
+                        inputStyle={styles.input}
+                        inputContainerStyle={styles.inputWrapper}
 
-        />
+                    />
 
-        <Input
-            label={'Password'}
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
-            placeholder={'password'}
-            secureTextEntry={true}
-            inputStyle={styles.input}
-            inputContainerStyle={styles.inputWrapper}
-        />
+                    <Input
+                        label={'Full Name'}
+                        value={this.state.name}
+                        placeholder={'Tran Van B'}
+                        onChangeText={(name) => this.setState({ name })}
+                        inputStyle={styles.input}
+                        inputContainerStyle={styles.inputWrapper}
+
+                    />
+
+                    <Input
+                        label={'Password'}
+                        value={this.state.password}
+                        onChangeText={(password) => this.setState({ password })}
+                        placeholder={'password'}
+                        secureTextEntry={true}
+                        inputStyle={styles.input}
+                        inputContainerStyle={styles.inputWrapper}
+                    />
 
 
-        <Input
-            label={'Password retype'}
-            value={this.state.passwordRetype}
-            onChangeText={(passwordRetype) => this.setState({ passwordRetype })}
-            placeholder={'password retype'}
-            secureTextEntry={true}
-            inputStyle={styles.input}
-            inputContainerStyle={styles.inputWrapper}
-        />
-        
-        <Button
-            type="outline"
-            title={'Login 21'}
-            style={styles.input}
-            onPress={this.onRegister.bind(this)}
-            
-        />
-      </View>
-    );
-  }
+                    <Input
+                        label={'Password retype'}
+                        value={this.state.passwordRetype}
+                        onChangeText={(passwordRetype) => this.setState({ passwordRetype })}
+                        placeholder={'password retype'}
+                        secureTextEntry={true}
+                        inputStyle={styles.input}
+                        inputContainerStyle={styles.inputWrapper}
+                    />
+
+                    <Button
+                        title={'REGISTER'}
+                        style={styles.input}
+                        onPress={this.onRegister.bind(this)}
+
+                    />
+
+                    <Text>Already have an account?</Text>
+
+                    <Button
+                        type="outline"
+                        title="LOGIN"
+                        titleStyle={styles.button}
+                        onPress={() => this.props.navigation.navigate('Register', { title: 'Register ' })} />
+                </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 15,
-    marginRight: 15,
-  },
-  input: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    minHeight: 20,
-    marginBottom: 5
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 15,
+        marginRight: 15,
+    },
+    input: {
+        paddingLeft: 10,
+        paddingRight: 10,
+        minHeight: 20,
+        marginBottom: 5
 
-  },
-  inputWrapper: {
-      marginBottom: 10,
-  }
+    },
+    inputWrapper: {
+        marginBottom: 10,
+    }
 });
