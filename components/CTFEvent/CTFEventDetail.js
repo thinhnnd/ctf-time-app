@@ -17,7 +17,7 @@ import * as SecureStore from 'expo-secure-store';
 import { styles } from './styles';
 import DATABASE_HELPERS from '../../database_helpers';
 import StaticDetails from './StaticDetails';
-
+import { AuthContext } from '../../contexts/auth.context';
 const { width } = Dimensions.get('window');
 const kPosterImageHeight = 480;
 const Duration = ({ event }) => (
@@ -40,6 +40,7 @@ export default class CTFEventDetail extends Component {
             warningText: ''
         }
     }
+    static contextType = AuthContext;
     componentDidMount() {
 
     }
@@ -52,11 +53,7 @@ export default class CTFEventDetail extends Component {
         });
     }
     onJoinButtonPressed = async (event) => {
-        // const tokenPromise = DATABASE_HELPERS.getUserToken();
-        const userPromise = DATABASE_HELPERS.getUserInfo();
-        // const token = await tokenPromise;
-        const userString = await userPromise;
-        const user = JSON.parse(userString);
+        const { user } = this.context;
         const token = user && user.token;
         if (token) {
             console.log('JOIN event');
@@ -70,22 +67,25 @@ export default class CTFEventDetail extends Component {
                 this.setState({ isJoined: true });
             }
             else {
-                this.setState({ isWarning: true, warningText: 'You are not a member of any teams, create now?', isJoined: false });
-                Alert.alert('Can\'t join event', this.state.warningText, [
-                    { text: 'Later', onPress: () => console.log('Later') },
-                    { text: 'OK', onPress: () => console.log('OK, create a team') }
-                ], { cancelable: false });
+                this.setState({ isWarning: true, warningText: 'You are not a member of any teams, create now?', isJoined: false },
+                    () => {
+                        Alert.alert('Can\'t join event', this.state.warningText, [
+                            { text: 'Later', onPress: () => console.log('Later') },
+                            { text: 'OK', onPress: () => console.log('OK, create a team') }
+                        ], { cancelable: false });
+                    });
             }
         }
         else {
-            this.setState({ isWarning: true, warningText: 'Join event failed', isJoined: false });
-            Alert.alert('Please login to join event', this.state.warningText, [
-                {
-                    text: 'OK', onPress: () => {
-                        this.props.navigation.navigate('Login', { from: 'EventDetail' });
+            this.setState({ isWarning: true, warningText: 'Join event failed', isJoined: false }, () => {
+                Alert.alert('Please login to join event', this.state.warningText, [
+                    {
+                        text: 'OK', onPress: () => {
+                            this.props.navigation.navigate('Login', { from: 'EventDetail' });
+                        }
                     }
-                }
-            ], { cancelable: false });
+                ], { cancelable: false });
+            });
         }
     }
     render() {
@@ -104,7 +104,6 @@ export default class CTFEventDetail extends Component {
                     )}
                 >
                     <View
-
                         containerStyle={{
                             flex: 3,
                             flexDirection: 'column',
@@ -131,12 +130,12 @@ export default class CTFEventDetail extends Component {
                     </View>
                     <Duration event={event} />
                     <LineIcon.Button
-                        style={{ marginHorizontal: 0, alignItems: 'center', justifyContent: 'center' }}
+                        style={{ marginHorizontal: 0, alignItems: 'center', justifyContent: 'center', fontSize: 16 }}
                         name={this.state.isJoined ? "check" : "plus"}
                         size={24}
                         borderRadius={0}
                         color='white'
-                        backgroundColor={emerald}
+                        backgroundColor={this.state.isJoined ? '#ffbb33' : '#00cb51'}
                         onPress={this.onJoinButtonPressed}>
                         <Text style={styles.joinButtonText}> {this.state.isJoined ? "JOINED" : "JOIN NOW "}</Text>
                     </LineIcon.Button>
@@ -147,7 +146,6 @@ export default class CTFEventDetail extends Component {
                         this.setState({ isJoined: false });
                     }}>Logout</Text>
                 </ScrollView>
-
             </View>
         );
     }

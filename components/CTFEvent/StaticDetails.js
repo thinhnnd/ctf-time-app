@@ -1,6 +1,7 @@
 import React from 'react';
 import { lightBackground, extraLightBackground, darkText } from '../../constants/Colors';
 import { View, Text } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 export default function StaticDetails({ event, styles }) {
     return (
         <View>
@@ -8,14 +9,14 @@ export default function StaticDetails({ event, styles }) {
                 <View style={{ backgroundColor: lightBackground, alignSelf: 'stretch', borderBottomWidth: 1, borderColor: extraLightBackground, }}>
                     <Text
                         style={styles.list}
-                        onPress={() => Linking.openURL(event.url)}>
+                        onPress={() => WebBrowser.openBrowserAsync(event.url)}>
                         Official URL : {event.url}
                     </Text>
                 </View>
                 <View style={{ backgroundColor: lightBackground, alignSelf: 'stretch', borderBottomWidth: 1, borderColor: extraLightBackground, }}>
                     <Text
                         style={styles.list}
-                        onPress={() => Linking.openURL(event.ctftime_url)}>
+                        onPress={() => WebBrowser.openBrowserAsync(event.ctftime_url)}>
                         CTFTime URL : {event.ctftime_url}
                     </Text>
                 </View>

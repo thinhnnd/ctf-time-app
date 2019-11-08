@@ -13,8 +13,7 @@ import { Input, Button } from 'react-native-elements';
 import axios from 'axios';
 import API_HELPERS from '../../api';
 import DATABASE_HELPERS from '../../database_helpers';
-
-import { AsyncStorage } from 'react-native';
+import { AuthContext } from '../../contexts/auth.context';
 import * as SecureStore from 'expo-secure-store';
 
 export default class Login extends Component {
@@ -27,24 +26,24 @@ export default class Login extends Component {
         };
         this.onLogin = this.onLogin.bind(this);
     }
-
+    static contextType = AuthContext;
     async onLogin() {
         const { email, password } = this.state;
         const { navigation } = this.props;
         API_HELPERS.login(email, password).then((res) => {
             const { data } = res;
             if (data.token) {
-                DATABASE_HELPERS.storeUserToken(data.token);
-                DATABASE_HELPERS.setUserInfo(data);
+                // DATABASE_HELPERS.storeUserToken(data.token);
+                // DATABASE_HELPERS.setUserInfo(data);
+                this.context.onLogin(data);
                 const from = navigation.getParam('from');
                 console.log('from', from);
-
                 from ? navigation.navigate(from) : void 0;
             }
 
         }).catch((err) => {
             console.log(err);
-            Alert.alert('NetworkError', err.message)
+            Alert.alert(err, err.message)
         })
     }
 
