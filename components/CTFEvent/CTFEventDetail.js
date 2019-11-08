@@ -7,27 +7,50 @@ import {
     ScrollView,
     Animated,
     Text,
-    Linking
+    Linking,
+    Alert
 } from 'react-native';
 import { lightBackground, extraLightBackground, darkText, lightText, emerald } from '../../constants/Colors';
 import Button from '../../components/Button';
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
+import * as SecureStore from 'expo-secure-store';
 
 const { width } = Dimensions.get('window');
 const kPosterImageHeight = 480;
 
 export default class CTFEventDetail extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            isJoined: false,
+            isWarning: false,
+            warningText: ''
+        }
+
+    }
+    componentDidMount() {
 
     }
     componentWillMount() {
+        const user = {
+            "teams": [
+                "5dc22f1ee50b550017243c74"
+            ],
+            "role": "user",
+            "_id": "5dc18b49a33d520017e31ccb",
+            "email": "xuanthu404@gmail.com",
+            "full_name": "Pham Xuan Thu",
+            "createdAt": "2019-11-05T14:46:33.239Z",
+            "__v": 0
+        }
         this._scrollY = new Animated.Value(0)
         this.animatedOpacity = this._scrollY.interpolate({
             inputRange: [40, 100],
             outputRange: [1, 0],
             extrapolate: 'clamp'
-        })
+        });
+        SecureStore.setItemAsync('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inh1YW50aHU0MDRAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpZCI6IjVkYzE4YjQ5YTMzZDUyMDAxN2UzMWNjYiIsImlhdCI6MTU3MzAwNjQyNCwiZXhwIjoxNTczMDQ5NjI0fQ.4V9elVDMBUeExS63mG2xmWQ3Iis5Te5yyJMpuER602k')
+        SecureStore.setItemAsync('user_info', JSON.stringify(user));
     }
     render() {
         const { event } = this.props;
@@ -84,13 +107,13 @@ export default class CTFEventDetail extends Component {
 
                     <LineIcon.Button
                         style={{ marginHorizontal: 0, alignItems: 'center', justifyContent: 'center' }}
-                        name="bag"
+                        name={this.state.isJoined ? "check" : "plus"}
                         size={24}
                         borderRadius={0}
                         color='white'
                         backgroundColor={emerald}
                         onPress={this.onJoinButtonPressed}>
-                        <Text style={styles.joinButtonText}> JOIN NOW </Text>
+                        <Text style={styles.joinButtonText}> {this.state.isJoined ? "JOINED" : "JOIN NOW "}</Text>
                     </LineIcon.Button>
 
                     <View style={styles.eventInfo}>
@@ -131,8 +154,43 @@ export default class CTFEventDetail extends Component {
             </View>
         );
     }
-    onJoinButtonPressed(event) {
-        console.log('JOIN event');
+    onJoinButtonPressed = async (event) => {
+        const tokenPromise = SecureStore.getItemAsync('token');
+        const userPromise = SecureStore.getItemAsync('user_info');
+        const token = await tokenPromise;
+        const userString = await userPromise;
+        const user = JSON.parse(userString);
+        if (token.length < 0) {
+            console.log('JOIN event');
+            console.log(user._id);
+            if (user.teams.length < 0) {
+                const body = {
+                    eventId: event._id,
+                    teamId: user.teams[0]
+                }
+                this.setState({ isJoined: true });
+
+            }
+            else {
+                this.setState({ isWarning: true, warningText: 'You are not a member of any teams, create now?', isJoined: false });
+                Alert.alert('Can\'t join event', this.state.warningText, [
+                    { text: 'Later', onPress: () => console.log('Later') },
+                    { text: 'OK', onPress: () => console.log('OK, create a team') }
+                ], { cancelable: false });
+            }
+        }
+        else {
+            this.setState({ isWarning: true, warningText: 'Join event failed', isJoined: false });
+            Alert.alert('Please login to join event', this.state.warningText, [
+                {
+                    text: 'OK', onPress: () => {
+                        console.log(this.props.navigation.navigate);
+
+                        this.props.navigation.navigate('Login', { from: 'EventDetail' });
+                    }
+                }
+            ], { cancelable: false });
+        }
     }
     onBackButtonPressed() {
         console.log("pop back")

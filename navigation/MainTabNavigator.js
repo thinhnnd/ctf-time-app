@@ -78,7 +78,11 @@ UserStack.navigationOptions = {
 UserStack.path = '';
 
 // CTFEventScreen
-const CTFEventStack = createStackNavigator({ CTFEvent: CTFEventScreen, EventDetail: { screen: EventDetailScreen } }, config)
+const CTFEventStack = createStackNavigator({
+    CTFEvent: CTFEventScreen,
+    EventDetail: { screen: EventDetailScreen },
+    Login: { screen: LoginScreen }
+}, config)
 CTFEventStack.navigationOptions = {
     tabBarLabel: 'Events',
     tabBarIcon: ({ focused }) => (
