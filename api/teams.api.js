@@ -3,5 +3,6 @@ import CONFIG from './config';
 
 
 export const getAllTeams = async () => {
-    return await axios.get(`${devURL}/api/v1/teams`);
+    const result = await axios.get(`${devURL}/api/v1/teams`);
+    return result.data;
 }
