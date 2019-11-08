@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -7,10 +7,13 @@ import {
     Button,
     Dimensions,
     SafeAreaView,
+    ActivityIndicator
 } from 'react-native';
 import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
+
+import API_HELPERS from '../api'
 
 const USERS = [
     {
@@ -41,6 +44,8 @@ const USERS = [
 
 const logo = 'https://g2e-gamers2mediasl.netdna-ssl.com/wp-content/themes/g2-esports/library/img/G2_Red_Eye_Dark_background.png'
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
+
 
 
 function rennderUser1(user, index) { // event team joined
@@ -133,7 +138,23 @@ renderListEvents = () => {
 }
 
 export default function TeamScreen(props) {
+    const [isLoading, setIsLoading] = useState(true);
+    const [teams, setTeam] = useState([]);
 
+    // function getAllTeams() {
+
+    // }
+
+    useEffect(() => {
+        API_HELPERS.getAllTeams()
+        .then( teams => {
+            setTeam(teams);
+            setIsLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    });
 
     return (
         <ScrollView style={styles.container}>
