@@ -1,7 +1,10 @@
 import CONFIG from './config';
 import axios from 'axios';
-
+import qs from 'qs';
 export const loginUser = async (email, password) => {
+    const body = new URLSearchParams();
+    body.append('email', email);
+    body.append('password', password);
     const config = {
         method: 'POST',
         url: `${CONFIG.devURL}/auth/login`,
@@ -16,30 +19,30 @@ export const loginUser = async (email, password) => {
         }
     }
     console.log('login with :', email, password);
-    const url = 'https://uit-ctf-time.herokuapp.com/api/v1/auth/login';
 
     axios.post(url, {
-        email: email,
-        password: password
-    }).then(res => {
-        console.log(res.data);
-
+        email: email, password: password
+    }, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
+        .then(res => {
+            console.log(res.data);
+        })
+        .catch(err => console.log('axios error', err))
     return await axios.request(config);
 }
 export const login = async (email, password) => {
-    const response = await fetch(`${CONFIG.devURL}/auth/login`, {
-        method: 'POST',
+    const data = {
+        'email': email,
+        'password': password
+    }
+    const response = await axios.post(`${CONFIG.devURL}/auth/login`, qs.stringify(data), {
         headers: {
             'Accept': 'application/json',
             'Content-type': 'application/x-www-form-urlencoded'
-        },
-        body: {
-            email: email,
-            password: password
         }
-    });
-    return response.json();
+    })
+    return response;
 }
 export const registerUser = async (userInfo) => {
     const config = {
