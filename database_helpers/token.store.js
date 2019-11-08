@@ -1,3 +1,4 @@
+import * as SecureStore from 'expo-secure-store';
 export const storeUserToken = async (token) => {
     try {
         await SecureStore.setItemAsync('token', JSON.stringify(token));
