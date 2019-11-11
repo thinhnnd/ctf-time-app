@@ -24,10 +24,10 @@ export default class Login extends Component {
             email: '',
             password: '',
         };
-        this.onLogin = this.onLogin.bind(this);
+        // this.onLogin = this.onLogin.bind(this);
     }
     static contextType = AuthContext;
-    async onLogin() {
+    onLogin = async () => {
         const { email, password } = this.state;
         const { navigation } = this.props;
         API_HELPERS.login(email, password).then((res) => {
@@ -61,22 +61,23 @@ export default class Login extends Component {
                 <Image source={require('../../assets/images/uit-ctf-time.png')} />
                 <Input
                     label={'Email'}
-                    value={this.state.email}
+                    value={this.state.email.trim()}
                     placeholder={'example@address.com'}
-                    onChangeText={(email) => this.setState({ email })}
+                    onChangeText={(email) => this.setState({ email: email.trim() })}
                     inputStyle={styles.input}
                     inputContainerStyle={styles.inputWrapper}
-
+                    autoCapitalize={'none'}
                 />
 
                 <Input
                     label={'Password'}
-                    value={this.state.password}
-                    onChangeText={(password) => this.setState({ password })}
+                    value={this.state.password.trim()}
+                    onChangeText={(password) => this.setState({ password: password.trim() })}
                     placeholder={'password'}
                     secureTextEntry={true}
                     inputStyle={styles.input}
                     inputContainerStyle={styles.inputWrapper}
+                    autoCapitalize={'none'}
                 />
 
                 <Button
