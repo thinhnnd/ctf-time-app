@@ -18,6 +18,8 @@ import { styles } from './styles';
 import DATABASE_HELPERS from '../../database_helpers';
 import StaticDetails from './StaticDetails';
 import { AuthContext } from '../../contexts/auth.context';
+import API_HELPERS from '../../api';
+
 const { width } = Dimensions.get('window');
 const kPosterImageHeight = 480;
 const Duration = ({ event }) => (
@@ -37,13 +39,10 @@ export default class CTFEventDetail extends Component {
         this.state = {
             isJoined: false,
             isWarning: false,
-            warningText: ''
+            warningText: '',
         }
     }
     static contextType = AuthContext;
-    componentDidMount() {
-
-    }
     componentWillMount() {
         this._scrollY = new Animated.Value(0)
         this.animatedOpacity = this._scrollY.interpolate({
@@ -52,7 +51,8 @@ export default class CTFEventDetail extends Component {
             extrapolate: 'clamp'
         });
     }
-    onJoinButtonPressed = async (event) => {
+    onJoinButtonPressed = async () => {
+        const { event } = this.props;
         const { user } = this.context;
         const token = user && user.token;
         if (token) {
@@ -63,6 +63,17 @@ export default class CTFEventDetail extends Component {
                 const body = {
                     eventId: event._id,
                     teamId: user.teams[0]
+                }
+                try {
+                    const response = await API_HELPERS.RegisterEvent(token, body);
+                    const { data } = response;
+                    console.log(data);
+                    if (data._id) {
+                        Alert.alert('Successfully', 'You registered this event successfully');
+                    }
+                } catch (error) {
+                    const { data } = error.response;
+                    Alert.alert('Register event failed', data.message);
                 }
                 this.setState({ isJoined: true });
             }
