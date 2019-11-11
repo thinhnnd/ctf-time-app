@@ -10,6 +10,9 @@ export const AuthProvider = (props) => {
             const user = JSON.parse(userString);
             if (user) setAuthData(user);
         })
+        .catch(err => {
+            console.log(err);
+        })
     }, []);
     const onLogin = async user => {
         DATABASE_HELPERS.setUserInfo(user);

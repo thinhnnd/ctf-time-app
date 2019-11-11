@@ -8,112 +8,79 @@ import {
     Dimensions,
     SafeAreaView,
 } from 'react-native';
-import Login from '../components/User/Login';
+// import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 
-const USERS = [
-    {
-        name: 'Johh Smith',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg',
-        value: '164',
-    },
-    {
-        name: 'Sarah Parker',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/evagiselle/128.jpg',
-        value: '203',
-        positive: true,
-    },
-    {
-        name: 'Paul Allen',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg',
-        value: '464',
-        positive: true,
-    },
-    {
-        name: 'Terry Andrews',
-        avatar:
-            'https://s3.amazonaws.com/uifaces/faces/twitter/talhaconcepts/128.jpg',
-        value: '80',
-        positive: false,
-    },
-]
-
-const logo = 'https://g2e-gamers2mediasl.netdna-ssl.com/wp-content/themes/g2-esports/library/img/G2_Red_Eye_Dark_background.png'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
-function rennderUser(user, index) {
-    const { name, avatar } = user;
-    return (
-        <ListItem
-            key={index}
-            leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{ 
-                marginHorizontal: 10,
-                marginTop: 10,
-                borderRadius:5
-            }}
-            title={name}
-        />
-    )
-}
 
-
-function renderJoinedEvent(user, index) {
-    const { name, avatar, value } = user;
-    return (
-        <ListItem
-            key={index}
-            leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{ 
-                marginHorizontal: 10,
-                marginTop: 10,
-                borderRadius:5,
-            }}
-            title={name}
-            subtitle= {`Grade: ${value}`}
-        />
-    )
-}
-
-renderListUsers = () => {
-    return USERS.map((user, index) => {
-        return rennderUser(user, index);
-    })
-}
-
-renderListEvents = () => {
-    return USERS.map((user, index) => {
-        return renderJoinedEvent(user, index);
-    })
-}
 
 export default function TeamScreen(props) {
 
+    const { team } = props;
 
+    function rennderUser(user, index) {
+        const { name, avatar } = user;
+        return (
+            <ListItem
+                key={index}
+                leftAvatar={{ source: { uri: avatar } }}
+                containerStyle={{
+                    marginHorizontal: 10,
+                    marginTop: 10,
+                    borderRadius: 5
+                }}
+                title={name}
+            />
+        )
+    }
+    
+    
+    function renderJoinedEvent(user, index) {
+        const { name, avatar, value } = user;
+        return (
+            <ListItem
+                key={index}
+                leftAvatar={{ source: { uri: avatar } }}
+                containerStyle={{
+                    marginHorizontal: 10,
+                    marginTop: 10,
+                    borderRadius: 5,
+                }}
+                title={name}
+                subtitle={`Grade: ${value}`}
+            />
+        )
+    }
+    
+    renderListMembers = (members) => {
+        return members.map((user, index) => {
+            return rennderUser(user, index);
+        })
+    }
+    
+    renderListEvents = (events) => {
+        return events.map((user, index) => {
+            return renderJoinedEvent(user, index);
+        })
+    }
     return (
-        <ScrollView style={styles.container}>
+
             <SafeAreaView
                 style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
             >
                 <View style={styles.statusBar} />
 
                 <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>G2 Team</Text>
+                    <Text style={styles.nameHeader}>
+                        {team.teamName}
+                    </Text>
                 </View>
                 <View>
                     <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            backgroundColor: 'white',
-                            borderRadius: 5,
-                            alignItems: 'center',
-                            marginHorizontal: 10,
-                            height: 250,
-                            marginBottom: 10,
-                        }}
+                        style={styles.teamInfo}
                     >
                         <View style={{ flex: 3, flexDirection: 'row' }}>
                             <View
@@ -126,11 +93,12 @@ export default function TeamScreen(props) {
                                 <Avatar
                                     width={145}
                                     height={145}
-                                    source={{
-                                        uri: logo,
+                                    source={ team.logo &&{
+                                        uri: team.logo,
                                     }}
                                     activeOpacity={0.7}
                                     avatarStyle={{ borderRadius: 145 / 2 }}
+                                    title={team.teamName[0]}
                                     overlayContainerStyle={{ backgroundColor: 'black' }}
                                 />
                             </View>
@@ -153,10 +121,10 @@ export default function TeamScreen(props) {
                                             fontWeight: 'bold',
                                             fontSize: 25,
                                             color: 'rgba(98,93,144,1)',
-                                            marginLeft: -15,
+                                            marginLeft: 5,
                                         }}
                                     >
-                                        G2
+                                        {team.teamName}
                                     </Text>
                                 </View>
                             </View>
@@ -214,39 +182,28 @@ export default function TeamScreen(props) {
                         </View>
                     </View>
                 </View>
-
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Members</Text>
-                </View>
-                {
-                    renderListUsers()
-                }
-
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Events Joined</Text>
-                </View>
-
-                {
-                    renderListEvents()
-                }
-
                 <View style={styles.navBar}>
                 </View>
-
             </SafeAreaView>
-        </ScrollView>
     );
 }
 
-TeamScreen.navigationOptions = {
-    header: null
-};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 15,
         color: '#ffffff',
+    },
+    teamInfo: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        borderRadius: 5,
+        alignItems: 'center',
+        marginHorizontal: 10,
+        height: 250,
+        marginBottom: 10,
     },
     wrapper: {
         marginLeft: 15,

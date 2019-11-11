@@ -12,6 +12,7 @@ import EventDetailScreen from '../screens/EventDetailScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import UserModifyScreen from '../screens/UserModifyScreen';
+import TeamDetailScreen from '../screens/TeamDetailScreen';
 
 
 const config = Platform.select({
@@ -45,6 +46,7 @@ HomeStack.path = '';
 const TeamStack = createStackNavigator(
     {
         Team: TeamScreen,
+        TeamDetail: TeamDetailScreen,
         Login: LoginScreen,
         Register: RegisterScreen,
     },

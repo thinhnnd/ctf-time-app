@@ -13,7 +13,10 @@ import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 
-import API_HELPERS from '../api'
+import API_HELPERS from '../api';
+import {AuthContext} from '../contexts/auth.context';
+import TeamList from '../components/Team/TeamsList';
+
 
 const USERS = [
     {
@@ -44,52 +47,6 @@ const USERS = [
 
 const logo = 'https://g2e-gamers2mediasl.netdna-ssl.com/wp-content/themes/g2-esports/library/img/G2_Red_Eye_Dark_background.png'
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
-
-
-
-function rennderUser1(user, index) { // event team joined
-    const { name, avatar } = user;
-    return (
-        <View
-            key={index}
-            style={{
-                height: 60,
-                marginHorizontal: 10,
-                marginTop: 10,
-                backgroundColor: 'white',
-                borderRadius: 5,
-                alignItems: 'center',
-                flexDirection: 'row'
-            }}
-        >
-            <View style={{
-                flex: 2,
-                flexDirection: 'row',
-                alignItems: 'center'
-            }}>
-                <View style={{ marginLeft: 15 }}>
-                    <Avatar
-                        small
-                        round
-                        source={{ uri: avatar }}
-                        activeOpacity={0.7}
-                    />
-                    <Text
-                        style={{
-                            fontWeight: 'normal',
-                            fontSize: 15,
-                            marginLeft: 10,
-                            color: 'gray',
-                        }}
-                    >
-                        {name}
-                    </Text>
-                </View>
-            </View>
-        </View>
-    );
-}
 
 function rennderUser(user, index) {
     const { name, avatar } = user;
@@ -139,160 +96,44 @@ renderListEvents = () => {
 
 export default function TeamScreen(props) {
     const [isLoading, setIsLoading] = useState(true);
-    const [teams, setTeam] = useState([]);
+    const [teams, setTeams] = useState([]);
 
     // function getAllTeams() {
 
     // }
 
-    useEffect(() => {
-        API_HELPERS.getAllTeams()
-        .then( teams => {
-            setTeam(teams);
+    fetchData = async () => {
+        try {
+            const result = await API_HELPERS.getAllTeams();
+            console.log(result);
+            setTeams(result);
             setIsLoading(false);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    });
+            console.log(isLoading);
+        }
+        catch (err) {
+            console.error(err);
+        }
 
+    }
+ 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log('render');
+    if (isLoading) {
+        return (<View style={styles.container, { paddingTop: 20 }}>
+            <ActivityIndicator />
+        </View>)
+    }
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView
-                style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
+                style={{ flex: 1 }}
             >
                 <View style={styles.statusBar} />
 
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>G2 Team</Text>
-                </View>
-                <View>
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            backgroundColor: 'white',
-                            borderRadius: 5,
-                            alignItems: 'center',
-                            marginHorizontal: 10,
-                            height: 250,
-                            marginBottom: 10,
-                        }}
-                    >
-                        <View style={{ flex: 3, flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Avatar
-                                    width={145}
-                                    height={145}
-                                    source={{
-                                        uri: logo,
-                                    }}
-                                    activeOpacity={0.7}
-                                    avatarStyle={{ borderRadius: 145 / 2 }}
-                                    overlayContainerStyle={{ backgroundColor: 'black' }}
-                                />
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        marginTop: 10,
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: 'bold',
-                                            fontSize: 25,
-                                            color: 'rgba(98,93,144,1)',
-                                            marginLeft: -15,
-                                        }}
-                                    >
-                                        G2
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{
-                            width: 300,
-                            borderWidth: 0.5,
-                            borderColor: 'rgba(222, 223, 226, 1)',
-                            marginHorizontal: 20,
-                            height: 1,
-                            marginVertical: 10
-                        }} />
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Button
-                                    title="View Profile"
-                                    buttonStyle={{
-                                        height: 33,
-                                        width: 120,
-                                        backgroundColor: 'rgba(222, 223, 226, 1)',
-                                        borderRadius: 5,
-                                    }}
-                                    titleStyle={{
-                                        fontWeight: 'normal',
-                                        fontSize: 13,
-                                        color: 'gray',
-                                    }}
-                                    onPress={() => console.log('aye')}
-                                    underlayColor="transparent"
-                                />
-                            </View>
-
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Button
-                                    title="Add User"
-                                    buttonStyle={{
-                                        height: 33,
-                                        width: 120,
-                                        backgroundColor: 'rgba(113, 154, 112, 1)',
-                                        borderRadius: 5,
-                                    }}
-                                    titleStyle={{
-                                        fontWeight: 'normal',
-                                        fontSize: 13,
-                                        color: 'white'
-                                    }}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                </View>
-
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Members</Text>
-                </View>
-                {
-                    renderListUsers()
-                }
-
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Events Joined</Text>
-                </View>
-
-                {
-                    renderListEvents()
-                }
+                <TeamList navigate={props.navigation.navigate} teams={teams} />
 
                 <View style={styles.navBar}>
                 </View>
@@ -311,6 +152,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 15,
         color: '#ffffff',
+        backgroundColor: 'rgba(241, 240, 241, 1)'
     },
     wrapper: {
         marginLeft: 15,
