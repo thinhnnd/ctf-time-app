@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -16,36 +16,9 @@ import { Button as ButtonRNE } from 'react-native-elements';
 import API_HELPERS from '../api';
 import {AuthContext} from '../contexts/auth.context';
 import TeamList from '../components/Team/TeamsList';
+import YourTeam from '../components/Team/YourTeam';
 
 
-const USERS = [
-    {
-        name: 'Johh Smith',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg',
-        value: '164',
-    },
-    {
-        name: 'Sarah Parker',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/evagiselle/128.jpg',
-        value: '203',
-        positive: true,
-    },
-    {
-        name: 'Paul Allen',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg',
-        value: '464',
-        positive: true,
-    },
-    {
-        name: 'Terry Andrews',
-        avatar:
-            'https://s3.amazonaws.com/uifaces/faces/twitter/talhaconcepts/128.jpg',
-        value: '80',
-        positive: false,
-    },
-]
-
-const logo = 'https://g2e-gamers2mediasl.netdna-ssl.com/wp-content/themes/g2-esports/library/img/G2_Red_Eye_Dark_background.png'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 function rennderUser(user, index) {
@@ -82,21 +55,11 @@ function renderJoinedEvent(user, index) {
     )
 }
 
-renderListUsers = () => {
-    return USERS.map((user, index) => {
-        return rennderUser(user, index);
-    })
-}
-
-renderListEvents = () => {
-    return USERS.map((user, index) => {
-        return renderJoinedEvent(user, index);
-    })
-}
-
 export default function TeamScreen(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [teams, setTeams] = useState([]);
+    const {authData} = useContext(AuthContext);
+    console.log('context', authData);
 
     // function getAllTeams() {
 
@@ -105,10 +68,8 @@ export default function TeamScreen(props) {
     fetchData = async () => {
         try {
             const result = await API_HELPERS.getAllTeams();
-            console.log(result);
             setTeams(result);
             setIsLoading(false);
-            console.log(isLoading);
         }
         catch (err) {
             console.error(err);
@@ -120,18 +81,34 @@ export default function TeamScreen(props) {
         fetchData();
     }, []);
 
-    console.log('render');
     if (isLoading) {
         return (<View style={styles.container, { paddingTop: 20 }}>
             <ActivityIndicator />
         </View>)
     }
+
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView
                 style={{ flex: 1 }}
             >
                 <View style={styles.statusBar} />
+                <View style={styles.navBar}>
+                    <Text style={styles.nameHeader}>Your Teams</Text>
+                </View>
+                    {                       
+                        !authData ? 
+                            (   <View style={styles.wrapper}>
+                                    <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
+                                    <Button 
+                                        title="Login/Register" 
+                                        onPress={()=>props.navigation.navigate('Login', {'from': 'Team'})} 
+                                        />
+                                    
+
+                                </View>
+                             ) : <YourTeam teams={authData.teams} /> 
+                    }               
 
                 <TeamList navigate={props.navigation.navigate} teams={teams} />
 
@@ -155,8 +132,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(241, 240, 241, 1)'
     },
     wrapper: {
-        marginLeft: 15,
-        marginRight: 15
+        marginLeft: 10,
+        marginRight: 10
     },
     statusBar: {
         height: 10,

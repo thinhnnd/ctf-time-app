@@ -8,10 +8,7 @@ export default function LoginScreen(props) {
     console.log(user);
     return (
         <ScrollView style={styles.container}>
-            <AppContext.Consumer>
-                { console.log(context)}
-                <Login navigation={props.navigation} />
-            </AppContext.Consumer>
+            <Login navigation={props.navigation} />
         </ScrollView>
     );
 }
@@ -20,7 +17,6 @@ export default function LoginScreen(props) {
 
 LoginScreen.navigationOptions = {
     title: 'Login',
-    headerLeft: null
 };
 
 const styles = StyleSheet.create({

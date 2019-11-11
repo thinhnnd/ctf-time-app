@@ -16,13 +16,16 @@ export const AuthProvider = (props) => {
     }, []);
     const onLogin = async user => {
         DATABASE_HELPERS.setUserInfo(user);
+        // console.log('auth context', user)
         setAuthData({ user });
+        // console.log('auth context, authData', authData)
+
     };
     const onLogout = async () => {
         DATABASE_HELPERS.clearUserInfo();
         setAuthData(initAuthData);
     }
-    const value = { ...authData, onLogin, onLogout };
+    const value = { authData, onLogin, onLogout };
     return <AuthContext.Provider value={value} {...props}></AuthContext.Provider>
 }
 export const useAuthContext = () => useContext(AuthContext);

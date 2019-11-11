@@ -25,7 +25,10 @@ export default function TeamDetailScreen(props) {
         return (
             <ListItem
                 key={index}
-                leftAvatar={{ source: { uri: avatar } }}
+                leftAvatar={{ 
+                    source: avatar && { uri: avatar },
+                    title: full_name[0]
+                }}
                 containerStyle={{ 
                     marginHorizontal: 10,
                     marginTop: 10,
@@ -101,6 +104,11 @@ export default function TeamDetailScreen(props) {
     );
 }
 
+TeamDetailScreen.navigationOptions = ({ navigation }) => {
+    return {
+        headerTitle: navigation.getParam("title"),
+    }
+}
 
 const styles = StyleSheet.create({
     container: {

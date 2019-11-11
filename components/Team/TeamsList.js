@@ -29,19 +29,14 @@ export default function TeamsList(props) {
     fetchData = async () => {
         try {
             const result = await API_HELPERS.getAllTeams();
-            console.log(result);
             setTeams(result);
             setIsLoading(false);
-            console.log(isLoading);
         }
         catch (err) {
             console.error(err);
         }
 
     }
-
-
-
     useEffect(() => {
         fetchData();
     }, []);
@@ -54,7 +49,6 @@ export default function TeamsList(props) {
 
     renderTeam = (team, index) => {
         const { teamName, avatar } = team;
-        console.log(team);
         return (
             <ListItem
                 key={index}

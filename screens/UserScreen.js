@@ -35,7 +35,6 @@ const USERS = [
         positive: true,
     }
 ]
-
 export default class UserScreen extends Component {
 
     // constructor(props) {
@@ -93,7 +92,15 @@ export default class UserScreen extends Component {
                         <Text style={styles.nameHeader}>Theresa, 26</Text>
                     </View>
                     <ScrollView style={styles.container}>
-                        <View style={{ backgroundColor: '#fff', paddingVertical: 15, borderRadius: 5, marginBottom: 10 }} >
+                        <View style={{ 
+                            flext: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#fff', 
+                            paddingVertical: 15, 
+                            borderRadius: 5, 
+                            marginBottom: 10 
+                        }} >
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                 <Avatar
                                     title={user.username[0]}
@@ -104,34 +111,23 @@ export default class UserScreen extends Component {
                                     }}
                                 />
                             </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    marginTop: 20,
-                                    marginHorizontal: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+
+                            <Text
+                                 style={{
+                                    fontSize: 26,
+                                    color: 'black',
+                                    fontWeight: 'bold',
                                 }}
                             >
-                                <Text
-                                    style={{
-                                        flex: 1,
-                                        fontSize: 26,
-                                        color: 'black',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    { user.username }
-                                </Text>
+                                { user.username }
+                            </Text>
                                 
-                            </View>
                             <View
                                 style={{
                                     flex: 1,
                                     marginTop: 20,
                                     width: SCREEN_WIDTH - 80,
-                                    marginLeft: 40,
+                                    
                                 }}
                             >
                                 <Text
@@ -150,6 +146,14 @@ export default class UserScreen extends Component {
                                         marginTop: 10,
                                     }} 
                                     title="Change Profile" 
+                                />
+
+                                <Button 
+                                    containerStyle={{ 
+                                        marginTop: 10,
+                                    }} 
+                                    type="outline"
+                                    title="Logout" 
                                 />
                             </View>
                         </View>
