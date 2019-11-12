@@ -90,6 +90,14 @@ export default function TeamScreen(props) {
         </View>)
     }
 
+    getYourTeam = () => {
+        const result = teams.find( (team) => {
+            return team._id == user.teams[0];
+        });
+
+        return result;
+    }
+
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView
@@ -110,7 +118,7 @@ export default function TeamScreen(props) {
 
 
                         </View>
-                        ) : <YourTeam teams={user.teams} />
+                        ) : <YourTeam navigate={props.navigation.navigate} user={user} team={getYourTeam()}  />
                 }
 
                 <TeamList navigate={props.navigation.navigate} teams={teams} />
