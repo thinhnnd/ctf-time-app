@@ -7,36 +7,72 @@ import {
     Button,
     Dimensions,
     SafeAreaView,
+    TextInput,
+    Alert
 } from 'react-native';
 import Login from '../components/User/Login';
-import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
+import { Input } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 
-import API_HELPERS from '../api';
-import { AuthContext, useAuthContext } from '../contexts/auth.context';
-import TeamList from '../components/Team/TeamsList';
-import YourTeam from '../components/Team/YourTeam';
+import {useAuthContext} from '../contexts/auth.context';
+
+import API_HELPERS from '../api'
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-export default function TeamManagementScreen(props) {
+export default function TeamCreationScreen(props) {
+    const { user } = useAuthContext(); 
+    const [nameInput, setNameInput ] = useState('');
+
+    async function  handleCreateTeam(teamName) {
+        const { token } = user;
+        teamName = teamName.trim();
+        try {
+            res = await API_HELPERS.createNewTeam(token, teamName)
+            Alert.alert(res.message);
+
+        }
+        catch (err) {
+            Alert.alert(err.message)
+        }
+    }
     return (
         <ScrollView style={styles.container}>
             <SafeAreaView
-                style={{ flex: 1 }}
+                style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
             >
                 <View style={styles.statusBar} />
-                <Text>Add Members</Text>
 
+                
+                <View style={{ 
+                    backgroundColor: '#fff', 
+                    paddingVertical: 15,
+                     paddingHorizontal: 10, 
+                     borderRadius: 5,
+                      marginBottom: 10
+                     }}>
+                    <Text style={{                      
+                        marginBottom: 10
+                    }}>
+                        Team name
+                    </Text>
+                    <Input containerStyle={{                      
+                        marginBottom: 10
+                    }} 
+                    onChangeText={ (value) => { 
+                        setNameInput(value) 
+                    }} />
+                    <Button title="Submit" onPress={ () => handleCreateTeam(nameInput) } />
+                </View>
 
             </SafeAreaView>
         </ScrollView>
     );
 }
 
-// TeamManagementScreen.navigationOptions = {
-//     header: { title: 'Team Management'}
+// TeamCreationScreen.navigationOptions = {
+//     header: { title: 'Team Creation'}
 // };
 
 const styles = StyleSheet.create({

@@ -44,9 +44,9 @@ export default function YourTeam(props) {
 
     if (teams.length === 0) {
         return (
-            <View>
-                <Text>You are not a member of any teams, create now?</Text>
-                <ButtonRNE title="CREATE TEAM" />
+            <View style={{ marginHorizontal: 10}}>
+                <Text style={{ marginBottom: 10}}>You are not a member of any teams, create now?</Text>
+                <ButtonRNE title="CREATE TEAM" onPress={ () => props.navigate('TeamCreation')} />
             </View>
         );
     }

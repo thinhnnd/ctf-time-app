@@ -28,7 +28,7 @@ export default function TeamManagementScreen(props) {
             >
                 <View style={styles.statusBar} />
                 <Text>Add Members</Text>
-
+                
 
             </SafeAreaView>
         </ScrollView>

@@ -95,7 +95,7 @@ export default function TeamScreen(props) {
                             marginVertical: 10
                         }} />
                         {
-                            team.leader == user._id ? <ManagementButton navigate={props.navigate} user={user} /> : <></>
+                           user &&( team.leader == user._id)  ? <ManagementButton navigate={props.navigate} user={user} /> : <></>
                         }
                     </View>
                 </View>

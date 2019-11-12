@@ -14,6 +14,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import UserModifyScreen from '../screens/UserModifyScreen';
 import TeamDetailScreen from '../screens/TeamDetailScreen';
 import TeamManagementScreen from '../screens/TeamManagementScreen';
+import TeamCreationScreen from '../screens/TeamCreationScreen';
 
 
 const config = Platform.select({
@@ -50,6 +51,7 @@ const TeamStack = createStackNavigator(
         TeamDetail: TeamDetailScreen,
         Login: LoginScreen,
         Register: RegisterScreen,
+        TeamCreation: TeamCreationScreen,
         TeamManagement: TeamManagementScreen
     },
     config
