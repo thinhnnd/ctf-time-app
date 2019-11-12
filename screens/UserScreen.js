@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Button, ListItem, Avatar } from 'react-native-elements';
 import { LinearGradient } from '../components/LinearGradient';
-
+import { AuthContext } from '../contexts/auth.context';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const IMAGE_SIZE = SCREEN_WIDTH - 120;
@@ -47,7 +47,7 @@ export default class UserScreen extends Component {
 
     constructor(props) {
         super(props);
-    
+
         this.state = {
             user: {
                 username: 'Username',
@@ -56,120 +56,146 @@ export default class UserScreen extends Component {
             }
         }
     }
+    static contextType = AuthContext;
+    componentDidMount() {
 
+    }
     renderJoinedTeam = (user, index) => {
         const { name, avatar, value } = user;
         return (
             <ListItem
                 key={index}
                 leftAvatar={{ source: { uri: avatar } }}
-                containerStyle={{ 
+                containerStyle={{
                     marginHorizontal: 10,
                     marginTop: 10,
-                    borderRadius:5,
+                    borderRadius: 5,
                 }}
                 title={name}
-                subtitle= {`Grade: ${value}`}
+                subtitle={`Grade: ${value}`}
             />
         )
     }
 
     renderJoinedTeams = () => {
-        return USERS.map( (user, index) =>{
-            return(
+        return USERS.map((user, index) => {
+            return (
                 this.renderJoinedTeam(user, index)
-        )})
+            )
+        })
     }
 
     render() {
         const { user } = this.state;
-        return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle="light-content" />
-                <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
-                    <View style={styles.statusBar} />
-                    <View style={styles.navBar}>
-                        <Text style={styles.nameHeader}>Theresa, 26</Text>
-                    </View>
-                    <ScrollView style={styles.container}>
-                        <View style={{ 
-                            flext: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#fff', 
-                            paddingVertical: 15, 
-                            borderRadius: 5, 
-                            marginBottom: 10 
-                        }} >
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Avatar
-                                    title={user.username[0]}
-                                    style={{
-                                        width: IMAGE_SIZE,
-                                        height: IMAGE_SIZE,
-                                        borderRadius: 10,
-                                    }}
-                                />
-                            </View>
+        const authUser = this.context.user;
+        console.log("user in userScreen", authUser);
 
-                            <Text
-                                 style={{
-                                    fontSize: 26,
-                                    color: 'black',
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                { user.username }
-                            </Text>
-                                
-                            <View
-                                style={{
-                                    flex: 1,
-                                    marginTop: 20,
-                                    width: SCREEN_WIDTH - 80,
-                                    
-                                }}
-                            >
-                                <Text
+        // if (!authUser) return (
+        //     <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
+        //         <StatusBar barStyle="light-content" />
+        //         <Button
+        //             containerStyle={{
+        //                 marginTop: 10,
+        //             }}
+        //             title='Login'
+        //             onPress={() => this.props.navigation.navigate('Login', { from: 'UserScreen' })}
+        //         />
+        //     </View>
+        // )
+        if (!authUser) {
+            this.props.navigation.navigate('Login', { from: 'UserScreen' });
+            return null;
+        }
+        else
+            return (
+                <SafeAreaView style={{ flex: 1 }}>
+                    <StatusBar barStyle="light-content" />
+                    <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
+                        <View style={styles.statusBar} />
+                        <View style={styles.navBar}>
+                            <Text style={styles.nameHeader}>Theresa, 26</Text>
+                        </View>
+                        <ScrollView style={styles.container}>
+                            <View style={{ backgroundColor: '#fff', paddingVertical: 15, borderRadius: 5, marginBottom: 10 }} >
+                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                    <Avatar
+                                        title={user.username[0]}
+                                        style={{
+                                            width: IMAGE_SIZE,
+                                            height: IMAGE_SIZE,
+                                            borderRadius: 10,
+                                        }}
+                                    />
+                                </View>
+                                <View
                                     style={{
                                         flex: 1,
-                                        fontSize: 15,
-                                        color: 'black',
-                                        fontWeight: 'normal',
-                                        textAlign: 'justify'
+                                        flexDirection: 'row',
+                                        marginTop: 20,
+                                        marginHorizontal: 40,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    { user.description }
-                                </Text>
-                                <Button 
-                                    containerStyle={{ 
-                                        marginTop: 10,
-                                    }} 
-                                    title="Change Profile" 
-                                />
+                                    <Text
+                                        style={{
+                                            flex: 1,
+                                            fontSize: 26,
+                                            color: 'black',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {user.username}
+                                    </Text>
 
-                                <Button 
-                                    containerStyle={{ 
-                                        marginTop: 10,
-                                    }} 
-                                    type="outline"
-                                    title="Logout" 
-                                />
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        marginTop: 20,
+                                        width: SCREEN_WIDTH - 80,
+                                        marginLeft: 40,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            flex: 1,
+                                            fontSize: 15,
+                                            color: 'black',
+                                            fontWeight: 'normal',
+                                            textAlign: 'justify'
+                                        }}
+                                    >
+                                        {user.description}
+                                    </Text>
+                                    <Button
+                                        containerStyle={{
+                                            marginTop: 10,
+                                        }}
+                                        title="Change Profile"
+                                    />
+                                    <Button
+                                        containerStyle={{
+                                            marginTop: 10,
+                                        }}
+                                        title="Logout"
+                                        onPress={() => this.context.onLogout()}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                        <View> 
-                            <Text style={styles.nameHeader}>Team Joined</Text>
-                        </View>
+                            <View>
+                                <Text style={styles.nameHeader}>Team Joined</Text>
+                            </View>
 
-                        <View style={ { marginBottom: 15 }}>
-                         { this.renderJoinedTeams() }
-                        </View>
+                            <View style={{ marginBottom: 15 }}>
+                                {this.renderJoinedTeams()}
+                            </View>
 
-                        
-                    </ScrollView>
-                </View>
-            </SafeAreaView>
-        );
+
+                        </ScrollView>
+                    </View>
+                </SafeAreaView>
+            );
     }
 }
 

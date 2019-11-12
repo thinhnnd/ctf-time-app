@@ -64,10 +64,10 @@ TeamStack.path = '';
 
 const UserStack = createStackNavigator(
     {
-        User: UserScreen,
-        Login: LoginScreen,
+        User: { screen: UserScreen },
+        Login: { screen: LoginScreen },
         Register: RegisterScreen,
-        ModifyUserInfo: UserModifyScreen 
+        ModifyUserInfo: UserModifyScreen
     },
 );
 
