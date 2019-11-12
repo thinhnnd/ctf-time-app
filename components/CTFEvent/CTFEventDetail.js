@@ -83,7 +83,7 @@ export default class CTFEventDetail extends Component {
                         Alert.alert('Can\'t join event', this.state.warningText, [
                             { text: 'Later', onPress: () => console.log('Later') },
                             { text: 'OK', onPress: () => console.log('OK, create a team') }
-                        ], { cancelable: false });
+                        ], { cancelable: true });
                     });
             }
         }
@@ -95,7 +95,7 @@ export default class CTFEventDetail extends Component {
                             this.props.navigation.navigate('Login', { from: 'EventDetail' });
                         }
                     }
-                ], { cancelable: false });
+                ], { cancelable: true });
             });
         }
     }

@@ -59,7 +59,7 @@ export default class UserScreen extends Component {
     }
     static contextType = AuthContext;
     componentDidMount() {
-        
+
     }
     renderJoinedTeam = (user, index) => {
         const { name, avatar, value } = user;
@@ -91,18 +91,22 @@ export default class UserScreen extends Component {
         const authUser = this.context.user;
         console.log("user in userScreen", authUser);
 
-        if (!authUser) return (
-            <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
-                <StatusBar barStyle="light-content" />
-                <Button
-                    containerStyle={{
-                        marginTop: 10,
-                    }}
-                    title='Login'
-                    onPress={() => this.props.navigation.navigate('Login', { from: 'UserScreen' })}
-                />
-            </View>
-        )
+        // if (!authUser) return (
+        //     <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
+        //         <StatusBar barStyle="light-content" />
+        //         <Button
+        //             containerStyle={{
+        //                 marginTop: 10,
+        //             }}
+        //             title='Login'
+        //             onPress={() => this.props.navigation.navigate('Login', { from: 'UserScreen' })}
+        //         />
+        //     </View>
+        // )
+        if (!authUser) {
+            this.props.navigation.navigate('Login', { from: 'UserScreen' });
+            return null;
+        }
         else
             return (
                 <SafeAreaView style={{ flex: 1 }}>
