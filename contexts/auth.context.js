@@ -6,6 +6,8 @@ const initAuthData = {};
 export const AuthProvider = (props) => {
     const [authData, setAuthData] = useState(initAuthData);
     useEffect(() => {
+        console.log('auth context:',authData);
+        
         DATABASE_HELPERS.getUserInfo().then(userString => {
             const user = JSON.parse(userString);
             if (user) setAuthData(user);
@@ -25,7 +27,7 @@ export const AuthProvider = (props) => {
         DATABASE_HELPERS.clearUserInfo();
         setAuthData(initAuthData);
     }
-    const value = { authData, onLogin, onLogout };
+    const value = { ...authData, onLogin, onLogout };
     return <AuthContext.Provider value={value} {...props}></AuthContext.Provider>
 }
 export const useAuthContext = () => useContext(AuthContext);

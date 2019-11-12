@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -14,7 +14,7 @@ import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 
 import API_HELPERS from '../api';
-import {AuthContext} from '../contexts/auth.context';
+import { AuthContext, useAuthContext } from '../contexts/auth.context';
 import TeamList from '../components/Team/TeamsList';
 import YourTeam from '../components/Team/YourTeam';
 
@@ -27,10 +27,10 @@ function rennderUser(user, index) {
         <ListItem
             key={index}
             leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{ 
+            containerStyle={{
                 marginHorizontal: 10,
                 marginTop: 10,
-                borderRadius:5
+                borderRadius: 5
             }}
             title={name}
         />
@@ -44,13 +44,13 @@ function renderJoinedEvent(user, index) {
         <ListItem
             key={index}
             leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{ 
+            containerStyle={{
                 marginHorizontal: 10,
                 marginTop: 10,
-                borderRadius:5,
+                borderRadius: 5,
             }}
             title={name}
-            subtitle= {`Grade: ${value}`}
+            subtitle={`Grade: ${value}`}
         />
     )
 }
@@ -58,8 +58,8 @@ function renderJoinedEvent(user, index) {
 export default function TeamScreen(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [teams, setTeams] = useState([]);
-    const {authData} = useContext(AuthContext);
-    console.log('context', authData);
+    // const {authData} = useContext(AuthContext);
+    const { user } = useAuthContext();
 
     // function getAllTeams() {
 
@@ -70,15 +70,18 @@ export default function TeamScreen(props) {
             const result = await API_HELPERS.getAllTeams();
             setTeams(result);
             setIsLoading(false);
+
         }
         catch (err) {
             console.error(err);
         }
 
     }
- 
+
     useEffect(() => {
         fetchData();
+        console.log('context', user);
+
     }, []);
 
     if (isLoading) {
@@ -96,19 +99,19 @@ export default function TeamScreen(props) {
                 <View style={styles.navBar}>
                     <Text style={styles.nameHeader}>Your Teams</Text>
                 </View>
-                    {                       
-                        !authData ? 
-                            (   <View style={styles.wrapper}>
-                                    <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
-                                    <Button 
-                                        title="Login/Register" 
-                                        onPress={()=>props.navigation.navigate('Login', {'from': 'Team'})} 
-                                        />
-                                    
+                {
+                    !user ?
+                        (<View style={styles.wrapper}>
+                            <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
+                            <Button
+                                title="Login/Register"
+                                onPress={() => props.navigation.navigate('Login', { 'from': 'Team' })}
+                            />
 
-                                </View>
-                             ) : <YourTeam teams={authData.teams} /> 
-                    }               
+
+                        </View>
+                        ) : <YourTeam teams={user.teams} />
+                }
 
                 <TeamList navigate={props.navigation.navigate} teams={teams} />
 

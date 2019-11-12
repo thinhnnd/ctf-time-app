@@ -20,14 +20,14 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function YourTeam(props) {
     const { teams, token } = props;
-    const [teamInfo, setTeam] = useState({});
+    const [teamInfo, setTeam] = useState();
 
     fetchTeamData = async () => {
         try {
             const data =  await API_HELPERS.getTeamDetails(teams[0], token);
-            console.log('data', data);
+            // console.log('data', data);
             setTeam(data);
-            console.log('teamInfo,', teamInfo);
+            // console.log('teamInfo,', teamInfo);
         } catch (err) {
             console.log(err);
         }
@@ -46,7 +46,7 @@ export default function YourTeam(props) {
                 </View>
             );
     }
-    if(teamInfo) {
+    if(!teamInfo) {
         return (
             <Text>is loading</Text>
         )
@@ -56,12 +56,6 @@ export default function YourTeam(props) {
                 style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
             >
                 <View style={styles.statusBar} />
-
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>
-                        {teamInfo.teamName}
-                    </Text>
-                </View>
                 <View>
                     <View
                         style={styles.teamInfo}
@@ -77,8 +71,8 @@ export default function YourTeam(props) {
                                 <Avatar
                                     width={145}
                                     height={145}
-                                    source={ team.logo &&{
-                                        uri: team.logo,
+                                    source={ teamInfo.logo &&{
+                                        uri: teamInfo.logo,
                                     }}
                                     activeOpacity={0.7}
                                     avatarStyle={{ borderRadius: 145 / 2 }}
