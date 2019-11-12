@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -14,14 +14,18 @@ import { Button as ButtonRNE } from 'react-native-elements';
 import TeamInfo from '../components/Team/TeamInfo';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+import {AuthContext} from '../contexts/auth.context';
 
 
 
 
 export default function TeamDetailScreen(props) {
+    const team= props.navigation.getParam("team")
 
-    function rennderUser(user, index) {
-        const { full_name, avatar } = user;
+
+
+    function renderMembers(mem, index) {
+        const { full_name, avatar, email, _id } = mem;
         return (
             <ListItem
                 key={index}
@@ -35,6 +39,10 @@ export default function TeamDetailScreen(props) {
                     borderRadius:5
                 }}
                 title={full_name}
+                subtitle= {`Email: ${email}`}
+                titleStyle={{
+                    color: _id == team.leader ? 'red' : 'black' 
+                }}
             />
         )
     }
@@ -58,19 +66,18 @@ export default function TeamDetailScreen(props) {
     }
     
     renderListMembers = (members) => {
-        return members.map((user, index) => {
-            return rennderUser(user, index);
+        return members.map((mems, index) => {
+            return renderMembers(mems, index);
         })
     }
     
     renderListEvents = (events) => {
-        return events.map((user, index) => {
-            return renderJoinedEvent(user, index);
+        return events.map((events, index) => {
+            return renderJoinedEvent(events, index);
         })
     }
 
     // const { team } = props;
-    const team= props.navigation.getParam("team")
     const navigation=props.navigation
     return (
         
@@ -80,7 +87,7 @@ export default function TeamDetailScreen(props) {
             >
                 <View style={styles.statusBar} />
 
-                <TeamInfo navigation={navigation} team={ team } />
+                <TeamInfo navigate={props.navigation.navigate} team={ team } />
 
                 <View style={styles.navBar}>
                     <Text style={styles.nameHeader}>Members</Text>
@@ -92,9 +99,6 @@ export default function TeamDetailScreen(props) {
                 <View style={styles.navBar}>
                     <Text style={styles.nameHeader}>Events Joined</Text>
                 </View>
-
-                {
-                }
 
                 <View style={styles.navBar}>
                 </View>
