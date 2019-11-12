@@ -8,10 +8,12 @@ import {
     ScrollView,
     Dimensions,
     StatusBar,
+    Alert,
 } from 'react-native';
 import { Button, ListItem, Avatar } from 'react-native-elements';
 import { LinearGradient } from '../components/LinearGradient';
 import { AuthContext } from '../contexts/auth.context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const IMAGE_SIZE = SCREEN_WIDTH - 120;
@@ -88,23 +90,31 @@ export default class UserScreen extends Component {
     render() {
         const { user } = this.state;
         const authUser = this.context.user;
-        console.log("user in userScreen", authUser);
-
-        // if (!authUser) return (
-        //     <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
-        //         <StatusBar barStyle="light-content" />
-        //         <Button
-        //             containerStyle={{
-        //                 marginTop: 10,
-        //             }}
-        //             title='Login'
-        //             onPress={() => this.props.navigation.navigate('Login', { from: 'UserScreen' })}
-        //         />
-        //     </View>
-        // )
         if (!authUser) {
-            this.props.navigation.navigate('Login', { from: 'UserScreen' });
-            return null;
+            Alert.alert('Unauthorized', 'Please login first', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        this.props.navigation.navigate('Login', { from: 'User' });
+                    }
+                }
+            ], { cancelable: false });
+            return (
+                <ScrollView style={{
+                    flex: 1,
+                    backgroundColor: '#fff',
+                }}>
+                    <View style={styles.notifierContainer}>
+                        <TouchableOpacity onPress={() => {
+                            this.props.navigation.navigate('Login', { from: 'User' });
+                        }} style={styles.notifierLink}>
+                            <Text style={styles.notifierLinkText}>
+                                Hey Guest, please login at here!!!
+                  </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            )
         }
         else
             return (
@@ -235,5 +245,16 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'normal',
         paddingBottom: 10,
+    },
+    notifierContainer: {
+        marginTop: 15,
+        alignItems: 'center',
+    },
+    notifierLink: {
+        paddingVertical: 15,
+    },
+    notifierLinkText: {
+        fontSize: 14,
+        color: '#2e78b7',
     },
 });
