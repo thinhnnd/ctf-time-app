@@ -7,7 +7,8 @@ import {
     StyleSheet,
     Image,
     Text,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ActivityIndicator
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import axios from 'axios';
@@ -23,18 +24,26 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            isPressed: false
         };
         // this.onLogin = this.onLogin.bind(this);
     }
     static contextType = AuthContext;
+    validateEmail = email => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return reg.test(email);
+    }
     onLogin = async () => {
         const { email, password } = this.state;
+        if (!email || !password || password.length < 6 || !this.validateEmail(email)) {
+            Alert.alert('Invalid credentials', 'Please enter a valid email and password');
+            return;
+        }
         const { navigation } = this.props;
+        this.setState({ isPressed: true });
         API_HELPERS.login(email, password).then((res) => {
             const { data } = res;
             if (data.token) {
-                // DATABASE_HELPERS.storeUserToken(data.token);
-                // DATABASE_HELPERS.setUserInfo(data);
                 this.context.onLogin(data);
                 const from = navigation.getParam('from');
                 console.log('from', from);
@@ -43,7 +52,7 @@ export default class Login extends Component {
 
         }).catch((err) => {
             console.log(err);
-            Alert.alert(err, err.message)
+            Alert.alert(err, err.response.data.message);
         })
     }
 
@@ -56,6 +65,11 @@ export default class Login extends Component {
     }
 
     render() {
+        if (this.state.isPressed) {
+            return (<View style={{ flex: 1, paddingTop: 20 }}>
+                <ActivityIndicator />
+            </View>)
+        }
         return (
             <View style={styles.container}>
                 <Image source={require('../../assets/images/uit-ctf-time.png')} />

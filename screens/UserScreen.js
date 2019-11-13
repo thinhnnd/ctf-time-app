@@ -59,7 +59,12 @@ export default class UserScreen extends Component {
         }
     }
     static contextType = AuthContext;
-    componentDidMount() {
+    async componentDidMount() {
+        const { user } = this.context;
+        if (user) {
+            console.log("start fetching team");
+            await this.fetchTeamDetail('');
+        }
 
     }
     renderJoinedTeam = (user, index) => {
@@ -67,7 +72,7 @@ export default class UserScreen extends Component {
         return (
             <ListItem
                 key={index}
-                leftAvatar={{ source: { uri: avatar } }}
+                leftAvatar={{ source: { uri: avatar || 'https://image.flaticon.com/icons/png/512/2180/2180075.png' } }}
                 containerStyle={{
                     marginHorizontal: 10,
                     marginTop: 10,
@@ -79,30 +84,34 @@ export default class UserScreen extends Component {
         )
     }
 
-    renderJoinedTeams = () => {
+    renderJoinedTeams = props => {
         return USERS.map((user, index) => {
             return (
                 this.renderJoinedTeam(user, index)
             )
         })
     }
+    fetchTeamDetail = async teamId => {
+        const { user } = this.context;
+        try {
+            const teamData = await API_HELPERS.getTeamDetails(user.teams[0], user.token);
+            console.log("team data", teamData);
 
+        } catch (error) {
+            const { data } = error.response;
+            Alert.alert('Error fetching team details', data.message);
+        }
+    }
     render() {
-        const { user } = this.state;
-        const authUser = this.context.user;
-        if (!authUser) {
-            Alert.alert('Unauthorized', 'Please login first', [
-                {
-                    text: 'OK',
-                    onPress: () => {
-                        this.props.navigation.navigate('Login', { from: 'User' });
-                    }
-                }
-            ], { cancelable: false });
+        // const { user } = this.state;
+        const { user } = this.context;
+        if (!user) {
             return (
-                <ScrollView style={{
+                <ScrollView contentContainerStyle={{
                     flex: 1,
                     backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 }}>
                     <View style={styles.notifierContainer}>
                         <TouchableOpacity onPress={() => {
@@ -123,13 +132,14 @@ export default class UserScreen extends Component {
                     <View style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}>
                         <View style={styles.statusBar} />
                         <View style={styles.navBar}>
-                            <Text style={styles.nameHeader}>Theresa, 26</Text>
+                            <Text style={styles.nameHeader}>{user.full_name}</Text>
                         </View>
                         <ScrollView style={styles.container}>
                             <View style={{ backgroundColor: '#fff', paddingVertical: 15, borderRadius: 5, marginBottom: 10 }} >
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Avatar
-                                        title={user.username[0]}
+                                        title={user.email}
+                                        source={require('../assets/images/user-default.png')}
                                         style={{
                                             width: IMAGE_SIZE,
                                             height: IMAGE_SIZE,
@@ -155,7 +165,7 @@ export default class UserScreen extends Component {
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        {user.username}
+                                        {user.email}
                                     </Text>
 
                                 </View>
@@ -176,7 +186,7 @@ export default class UserScreen extends Component {
                                             textAlign: 'justify'
                                         }}
                                     >
-                                        {user.description}
+                                        {'lorem loue piodm ceil moifs lsewi klso ciolj jdoie axesa kcoe keonvj.'}
                                     </Text>
                                     <Button
                                         containerStyle={{
@@ -188,6 +198,7 @@ export default class UserScreen extends Component {
                                         containerStyle={{
                                             marginTop: 10,
                                         }}
+                                        type="outline"
                                         title="Logout"
                                         onPress={() => this.context.onLogout()}
                                     />
@@ -254,7 +265,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
     },
     notifierLinkText: {
-        fontSize: 14,
+        fontSize: 20,
         color: '#2e78b7',
     },
 });
