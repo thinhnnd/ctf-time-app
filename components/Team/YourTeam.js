@@ -62,7 +62,7 @@ export default function YourTeam(props) {
 
     handleYourTeamDetail = (team, navigate) => {
         // console.log('event handler', event);
-        console.log('press')
+        // console.log('press')
 
         navigate('TeamDetail', { team: team, title: team.teamName });
     }

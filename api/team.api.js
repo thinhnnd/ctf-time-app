@@ -11,7 +11,7 @@ export const getTeamDetails = async (id, token) => {
             authorization: `Bearer ${token}`,
         }
     });
-    console.log('team', team.data);
+    // console.log('team', team.data);
     return team.data;
 }
 export const createNewTeam = async (token, teamName) => {

@@ -31,18 +31,15 @@ export default function TeamManagementScreen(props) {
     // console.log(team);
 
     function handleSubmit(val) {
-        console.log(val);
         if(val.length == 0) {
             Alert.alert('Please insert member id or email');
         }
         else {
             // Alert.alert('OK');
             API_HELPERS.addNewMember(user.token, team._id, val).then( (res) => {
-                console.log(res);
                 setTextInput('');
 
             }).catch( err => {
-                console.log(err.message);
                 if(err.message.indexOf("Cast to ObjectId failed for value") == 0) {
                     Alert.alert('User not found!')
                 } else {

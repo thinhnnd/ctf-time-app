@@ -20,7 +20,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function TeamScreen(props) {
     const { user } = useAuthContext();
-    console.log(user);
+    // console.log(user);
     const { team } = props;
 
     return (

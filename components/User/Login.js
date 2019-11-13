@@ -51,7 +51,7 @@ export default class Login extends Component {
             }
 
         }).catch((err) => {
-            console.log(err);
+            // console.log(err);
             Alert.alert(err, err.response.data.message);
         })
     }
@@ -60,7 +60,7 @@ export default class Login extends Component {
         try {
             await SecureStore.setItemAsync('token', JSON.stringify(token));
         } catch (err) {
-            console.log(err);
+            throw new Error(err.message);
         }
     }
 
