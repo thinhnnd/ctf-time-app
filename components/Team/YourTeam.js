@@ -54,7 +54,7 @@ export default function YourTeam(props) {
         return (
             <View>
                 <Text>You are not a member of any teams, create now?</Text>
-                <ButtonRNE title="CREATE TEAM" />
+                <ButtonRNE title="CREATE TEAM" onPress={ () => props.navigate('TeamCreation')} />
             </View>
         )
     }
@@ -62,8 +62,7 @@ export default function YourTeam(props) {
 
     handleYourTeamDetail = (team, navigate) => {
         // console.log('event handler', event);
-        console.log('press')
-        console.log(team)
+        // console.log('press')
 
         navigate('TeamDetail', { team: team, title: team.teamName });
     }

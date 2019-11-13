@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, ListItem, Button } from 'react-native-elements';
 import { AuthContext } from '../../contexts/auth.context';
 import { LinearGradient } from '../LinearGradient';
-import { renderUser, renderJoinedEvent } from '../../shared/team.share';
+//import { renderUser, renderJoinedEvent } from '../../shared/team.share';
 import API_HELPERS from '../../api';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;

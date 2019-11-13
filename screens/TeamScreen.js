@@ -7,7 +7,8 @@ import {
     Button,
     Dimensions,
     SafeAreaView,
-    ActivityIndicator
+    ActivityIndicator,
+    RefreshControl
 } from 'react-native';
 import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
@@ -21,45 +22,27 @@ import YourTeam from '../components/Team/YourTeam';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-function rennderUser(user, index) {
-    const { name, avatar } = user;
-    return (
-        <ListItem
-            key={index}
-            leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{
-                marginHorizontal: 10,
-                marginTop: 10,
-                borderRadius: 5
-            }}
-            title={name}
-        />
-    )
-}
+function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
 
-
-function renderJoinedEvent(user, index) {
-    const { name, avatar, value } = user;
-    return (
-        <ListItem
-            key={index}
-            leftAvatar={{ source: { uri: avatar } }}
-            containerStyle={{
-                marginHorizontal: 10,
-                marginTop: 10,
-                borderRadius: 5,
-            }}
-            title={name}
-            subtitle={`Grade: ${value}`}
-        />
-    )
-}
 
 export default function TeamScreen(props) {
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = React.useState(false);
+
     const [teams, setTeams] = useState([]);
-    // const {authData} = useContext(AuthContext);
+    
     const { user } = useAuthContext();
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetchData().then(() => setRefreshing(false));;
+
+        // wait(2000).then(() => setRefreshing(false));
+      }, [refreshing]);
 
     // function getAllTeams() {
 
@@ -99,7 +82,11 @@ export default function TeamScreen(props) {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <SafeAreaView
                 style={{ flex: 1 }}
             >
@@ -125,7 +112,6 @@ export default function TeamScreen(props) {
 
                 <View style={styles.navBar}>
                 </View>
-
             </SafeAreaView>
         </ScrollView>
     );

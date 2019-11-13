@@ -20,7 +20,6 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default function ManagementButton(props) {
     // const { user } = useContext(AuthContext);
     const { team } = props;
-
     return (
         <View
             style={{
@@ -44,7 +43,7 @@ export default function ManagementButton(props) {
                         color: 'white'
                     }}
 
-                    onPress={ () => props.navigate('TeamManagement')}
+                    onPress={ () => props.navigate('TeamManagement', { team: team})}
                 />
             </View>
         </View>
