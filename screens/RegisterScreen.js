@@ -14,6 +14,7 @@ export default function RegisterScreen(props) {
 
 RegisterScreen.navigationOptions = {
     title: 'Register',
+    headerLeft: null
 };
 
 const styles = StyleSheet.create({
