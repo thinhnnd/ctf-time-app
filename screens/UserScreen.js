@@ -17,14 +17,6 @@ export default class UserScreen extends Component {
         }
     }
     static contextType = AuthContext;
-    async componentDidMount() {
-        const { user } = this.context;
-        if (user) {
-            console.log("start fetching team");
-            await this.fetchTeamDetail('');
-        }
-
-    }
     render() {
         // const { user } = this.state;
         const { user } = this.context;
