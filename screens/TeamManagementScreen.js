@@ -42,7 +42,12 @@ export default function TeamManagementScreen(props) {
                 setTextInput('');
 
             }).catch( err => {
-                console.log(err)
+                console.log(err.message);
+                if(err.message.indexOf("Cast to ObjectId failed for value") == 0) {
+                    Alert.alert('User not found!')
+                } else {
+                    Alert.alert(err.message);
+                }
             });
         }
 

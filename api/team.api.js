@@ -53,6 +53,7 @@ export const addNewMember = async (token, teamId, userToAdd) => {
         return res.data;
     } 
     catch (err) {
+        // console.log(err.response);
         throw new Error(err.response.data.message);   
     }
 }
