@@ -26,11 +26,33 @@ export const createNewTeam = async (token, teamName) => {
                 teamName: teamName
             }
           }
-        return res = await axios(config);
-        
+        res = await axios(config);
+        return res.data;
     }
-
     catch (err) {
-        console.log(err);
+        let shortErr = new Error();
+        // shortErr.
+        // console.log('createTeam', err.response);
+        throw new Error(err.response.data.message);   
+     }
+}
+
+export const addNewMember = async (token, teamId, userToAdd) => {
+    try {
+        const config = {
+            method: 'put',
+            url: `${url}/${teamId}/add-member`,
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+            data: {
+                member: userToAdd
+            }
+          }
+        res = await axios(config);
+        return res.data;
+    } 
+    catch (err) {
+        throw new Error(err.response.data.message);   
     }
 }

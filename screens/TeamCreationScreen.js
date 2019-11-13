@@ -27,15 +27,26 @@ export default function TeamCreationScreen(props) {
 
     async function  handleCreateTeam(teamName) {
         const { token } = user;
-        teamName = teamName.trim();
-        try {
-            res = await API_HELPERS.createNewTeam(token, teamName)
-            Alert.alert(res.message);
+        const team= props.navigation.getParam("team")
 
-        }
-        catch (err) {
-            Alert.alert(err.message)
-        }
+        // console.log(team);
+        teamName = teamName.trim();
+        API_HELPERS.createNewTeam(token, teamName).then( (res)=> {
+            console.log('res', res);
+            Alert.alert(res.response.data.message);
+        }).catch( err => {
+            // console.log('err handle createTeam', err);
+            Alert.alert('Notice', err.message);
+        })
+        // try {
+        //     res = await API_HELPERS.createNewTeam(token, teamName);
+        //     console.log('res', res);
+        //     Alert.alert(res.response.data.message);
+
+        // }
+        // catch (err) {
+        //     Alert.alert(err, err.response.data.message);
+        // }
     }
     return (
         <ScrollView style={styles.container}>
