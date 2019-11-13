@@ -40,6 +40,8 @@ export default class CTFEventDetail extends Component {
             isJoined: false,
             isWarning: false,
             warningText: '',
+            liked: false,
+            isFinished: false
         }
     }
     static contextType = AuthContext;
@@ -51,15 +53,27 @@ export default class CTFEventDetail extends Component {
             extrapolate: 'clamp'
         });
     }
+    componentDidMount() {
+        const current = new Date().getTime();
+        const eventFinished = new Date(this.props.event.finish).getTime();
+        if (current > eventFinished) {
+            this.setState({ isFinished: true });
+        }
+    }
     onJoinButtonPressed = async () => {
         const { event } = this.props;
         const { user } = this.context;
+        const { isFinished } = this.state;
         const token = user && user.token;
         if (token) {
             console.log('JOIN event');
             console.log(user._id);
             if (user.teams.length > 0) {
                 //reg event
+                if (isFinished) {
+                    Alert.alert('Event finished', `${event.title} has been finished`);
+                    return;
+                }
                 const body = {
                     eventId: event._id,
                     teamId: user.teams[0]
@@ -67,7 +81,6 @@ export default class CTFEventDetail extends Component {
                 try {
                     const response = await API_HELPERS.RegisterEvent(token, body);
                     const { data } = response;
-                    console.log(data);
                     if (data._id) {
                         Alert.alert('Successfully', 'You registered this event successfully');
                     }
@@ -142,41 +155,36 @@ export default class CTFEventDetail extends Component {
                     <Duration event={event} />
                     <LineIcon.Button
                         style={{ marginHorizontal: 0, alignItems: 'center', justifyContent: 'center', fontSize: 16 }}
-                        name={this.state.isJoined ? "check" : "plus"}
+                        name={this.state.isFinished ? 'flag' : this.state.isJoined ? "check" : "plus"}
                         size={24}
                         borderRadius={0}
                         color='white'
-                        backgroundColor={this.state.isJoined ? '#ffbb33' : '#00cb51'}
+                        backgroundColor={this.state.isJoined || this.state.isFinished ? '#ffbb33' : '#00cb51'}
                         onPress={this.onJoinButtonPressed}>
-                        <Text style={styles.joinButtonText}> {this.state.isJoined ? "JOINED" : "JOIN NOW "}</Text>
+                        <Text style={styles.joinButtonText}> {this.state.isFinished ? 'FINISHED' : this.state.isJoined ? "JOINED" : "JOIN NOW "}</Text>
                     </LineIcon.Button>
                     <StaticDetails event={event} styles={styles} />
-                    <Text onPress={() => {
-                        DATABASE_HELPERS.clearUserInfo();
-                        DATABASE_HELPERS.clearUserToken();
-                        this.setState({ isJoined: false });
-                    }}>Logout</Text>
                 </ScrollView>
             </View>
         );
     }
 
-    onBackButtonPressed() {
+    onBackButtonPressed = () => {
         console.log("pop back")
     }
-    onLikeButtonPressed() {
-        console.log('LIKED event');
-
+    onLikeButtonPressed = () => {
+        this.setState({ liked: true });
     }
-    onShareButtonPressed() {
+    onShareButtonPressed = () => {
         console.log('SHARE event');
 
     }
-    actionButtonGroup() {
+    actionButtonGroup = () => {
+        const { liked, isFinished } = this.state;
         return (
             <View style={styles.buttonGroup}>
-                {<Button type={'IconText'} icon={'ios-heart-empty'} title={'LIKE'} onPress={this.onLikeButtonPressed} />}
-                {<Button type={'IconText'} icon={'ios-play'} title={'JOIN'} onPress={this.onJoinButtonPressed} />}
+                {<Button type={'IconText'} icon={!liked ? 'ios-heart-empty' : 'ios-heart'} title={'LIKE'} onPress={this.onLikeButtonPressed} />}
+                {<Button type={'IconText'} icon={'ios-play'} title={isFinished ? 'FINISHED' : 'JOIN'} onPress={this.onJoinButtonPressed} />}
                 {<Button type={'IconText'} icon={'md-share'} title={'SHARE'} onPress={this.onShareButtonPressed} />}
             </View>
         );
