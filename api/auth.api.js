@@ -44,20 +44,19 @@ export const login = async (email, password) => {
     })
     return response;
 }
-export const registerUser = async (userInfo) => {
-    const config = {
-        method: 'POST',
-        url: `${CONFIG.devURL}/auth/register`,
+export const registerUser = async (email, full_name, password) => {
+    const payload = {
+        'email': email,
+        'full_name': full_name,
+        'password': password
+    }
+    const response = await axios.post(`${CONFIG.devURL}/auth/register`, (payload), {
         headers: {
-            'User-Agent': 'UIT CTF time Android app',
             'Accept': 'application/json',
             'Content-type': 'application/json'
-        },
-        data: {
-            userInfo
         }
-    }
-    return await axios.request({ config });
+    });
+    return response;
 }
 
 export const saveUserData = async (data) => {
