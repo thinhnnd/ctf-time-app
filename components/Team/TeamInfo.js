@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -11,61 +11,18 @@ import {
 // import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
+import ManagementButton from '../Team/ManagementButton';
+
+import {AuthContext, useAuthContext} from '../../contexts/auth.context'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
-
-
 export default function TeamScreen(props) {
-
+    const { user } = useAuthContext();
+    console.log(user);
     const { team } = props;
 
-    function rennderUser(user, index) {
-        const { name, avatar } = user;
-        return (
-            <ListItem
-                key={index}
-                leftAvatar={{ source: { uri: avatar } }}
-                containerStyle={{
-                    marginHorizontal: 10,
-                    marginTop: 10,
-                    borderRadius: 5
-                }}
-                title={name}
-            />
-        )
-    }
-    
-    
-    function renderJoinedEvent(user, index) {
-        const { name, avatar, value } = user;
-        return (
-            <ListItem
-                key={index}
-                leftAvatar={{ source: { uri: avatar } }}
-                containerStyle={{
-                    marginHorizontal: 10,
-                    marginTop: 10,
-                    borderRadius: 5,
-                }}
-                title={name}
-                subtitle={`Grade: ${value}`}
-            />
-        )
-    }
-    
-    renderListMembers = (members) => {
-        return members.map((user, index) => {
-            return rennderUser(user, index);
-        })
-    }
-    
-    renderListEvents = (events) => {
-        return events.map((user, index) => {
-            return renderJoinedEvent(user, index);
-        })
-    }
     return (
 
             <SafeAreaView
@@ -137,49 +94,9 @@ export default function TeamScreen(props) {
                             height: 1,
                             marginVertical: 10
                         }} />
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Button
-                                    title="View Profile"
-                                    buttonStyle={{
-                                        height: 33,
-                                        width: 120,
-                                        backgroundColor: 'rgba(222, 223, 226, 1)',
-                                        borderRadius: 5,
-                                    }}
-                                    titleStyle={{
-                                        fontWeight: 'normal',
-                                        fontSize: 13,
-                                        color: 'gray',
-                                    }}
-                                    onPress={() => console.log('aye')}
-                                    underlayColor="transparent"
-                                />
-                            </View>
-
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Button
-                                    title="Add User"
-                                    buttonStyle={{
-                                        height: 33,
-                                        width: 120,
-                                        backgroundColor: 'rgba(113, 154, 112, 1)',
-                                        borderRadius: 5,
-                                    }}
-                                    titleStyle={{
-                                        fontWeight: 'normal',
-                                        fontSize: 13,
-                                        color: 'white'
-                                    }}
-                                />
-                            </View>
-                        </View>
+                        {
+                           user &&( team.leader == user._id)  ? <ManagementButton navigate={props.navigate} user={user} /> : <></>
+                        }
                     </View>
                 </View>
                 <View style={styles.navBar}>

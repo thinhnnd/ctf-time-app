@@ -41,7 +41,7 @@ export default function TeamsList(props) {
         fetchData();
     }, []);
 
-    handlerCTFEventDetail = (team, navigate) => {
+    handleTeamDetail = (team, navigate) => {
         // console.log('event handler', event);
 
         navigate('TeamDetail', { team: team, title: team.teamName });
@@ -63,7 +63,7 @@ export default function TeamsList(props) {
                 }}
                 title={teamName}
                 team={team}
-                onPress={() => handlerCTFEventDetail(team, props.navigate)}
+                onPress={() => handleTeamDetail(team, props.navigate)}
             />
         )
     }
