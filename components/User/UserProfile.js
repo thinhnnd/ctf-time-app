@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, ListItem, Button } from 'react-native-elements';
 import { AuthContext } from '../../contexts/auth.context';
 import { LinearGradient } from '../LinearGradient';
+import { withNavigation } from 'react-navigation';
 //import { renderUser, renderJoinedEvent } from '../../shared/team.share';
 import API_HELPERS from '../../api';
 
@@ -30,8 +31,8 @@ const USERS = [
         positive: true,
     }
 ]
-const renderJoinedTeam = team => {
-    const { _id, members, teamName, leader, eventsRegistration } = team;
+const Team = props => {
+    const { _id, members, teamName, leader, eventsRegistration } = props.team;
     console.log("members", members);
     return (
         <ListItem
@@ -44,14 +45,17 @@ const renderJoinedTeam = team => {
             }}
             title={teamName}
             subtitle={`Leader ` + leader}
+            onPress={() => props.navigation.navigate('Team')}
         />
     )
 }
 
-const MyTeams = ({ teams }) => {
-    return teams.map(team => renderJoinedTeam(team))
+const MyTeams = ({ teams, navigation }) => {
+    console.log("navigation", navigation);
+
+    return teams.map(team => <Team key={team._id} team={team} navigation={navigation} />)
 }
-export default class UserProfile extends Component {
+class UserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -119,7 +123,7 @@ export default class UserProfile extends Component {
                                         fontWeight: 'bold',
                                     }}
                                 >
-                                    {user.email}
+                                    {user.full_name}
                                 </Text>
 
                             </View>
@@ -162,8 +166,8 @@ export default class UserProfile extends Component {
                             <Text style={styles.nameHeader}>Team Joined</Text>
                         </View>
 
-                        <View style={{ marginBottom: 15 }}>
-                            <MyTeams teams={this.state.teams} />
+                        <View style={{ marginBottom: 15 }} >
+                            <MyTeams teams={this.state.teams} navigation={this.props.navigation} />
                         </View>
 
 
@@ -173,6 +177,7 @@ export default class UserProfile extends Component {
         );
     }
 }
+export default withNavigation(UserProfile);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
