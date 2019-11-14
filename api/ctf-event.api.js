@@ -11,6 +11,11 @@ export const getAllEvents = async () => {
     return response.json();
 }
 export const getEvent = async (id) => {
-    const request = await axios.get(`${CONFIG.devURL}/${id}`);
-    return request.data;
+    try {
+        const request = await axios.get(`${CONFIG.devURL}/events/${id}`);
+        return request.data;
+    }
+    catch (err) {
+        throw new Error(err.response.data.message);
+    }
 }
