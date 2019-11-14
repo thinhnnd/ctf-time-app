@@ -15,6 +15,7 @@ import UserModifyScreen from '../screens/UserModifyScreen';
 import TeamDetailScreen from '../screens/TeamDetailScreen';
 import TeamManagementScreen from '../screens/TeamManagementScreen';
 import TeamCreationScreen from '../screens/TeamCreationScreen';
+import RankingScreen from '../screens/RankingScreen';
 
 
 const config = Platform.select({
@@ -91,7 +92,8 @@ UserStack.path = '';
 const CTFEventStack = createStackNavigator({
     CTFEvent: CTFEventScreen,
     EventDetail: { screen: EventDetailScreen },
-    Login: { screen: LoginScreen }
+    Login: { screen: LoginScreen },
+    Ranking: { screen: RankingScreen }
 }, config)
 CTFEventStack.navigationOptions = {
     tabBarLabel: 'Events',

@@ -25,3 +25,6 @@ export const DeleteRegistrationEvent = async (token, data) => {
             }
         })
 }
+export const GetRankingOfEvent = async (event) => {
+    return await axios.get(url + '/rank?event=' + event)
+}

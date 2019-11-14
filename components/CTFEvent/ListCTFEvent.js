@@ -1,7 +1,8 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, Platform, View, FlatList, Text, Alert } from 'react-native';
-import { Image, ListItem } from 'react-native-elements';
+import { Image, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { withNavigation } from 'react-navigation';
 const ListViewItemSeparator = () => {
     return (
         <View
@@ -41,7 +42,7 @@ const CTFEvent = ({ event, navigate }) => {
     )
 }
 
-export default class ListCTFEvent extends React.Component {
+class ListCTFEvent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -78,6 +79,7 @@ export default class ListCTFEvent extends React.Component {
         )
     }
 }
+export default  withNavigation(ListCTFEvent);
 const styles = StyleSheet.create({
     MainContainer: {
         justifyContent: 'center',
