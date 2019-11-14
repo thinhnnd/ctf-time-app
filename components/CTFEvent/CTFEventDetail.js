@@ -175,17 +175,17 @@ export default class CTFEventDetail extends Component {
     onLikeButtonPressed = () => {
         this.setState({ liked: true });
     }
-    onShareButtonPressed = () => {
-        console.log('SHARE event');
-
+    onRankButtonPressed = () => {
+        const { event } = this.props;
+        this.props.navigation.navigate('Ranking', { event: event._id, eventName: event.title });
     }
     actionButtonGroup = () => {
         const { liked, isFinished } = this.state;
         return (
             <View style={styles.buttonGroup}>
                 {<Button type={'IconText'} icon={!liked ? 'ios-heart-empty' : 'ios-heart'} title={'LIKE'} onPress={this.onLikeButtonPressed} />}
-                {<Button type={'IconText'} icon={'ios-play'} title={isFinished ? 'FINISHED' : 'JOIN'} onPress={this.onJoinButtonPressed} />}
-                {<Button type={'IconText'} icon={'md-share'} title={'SHARE'} onPress={this.onShareButtonPressed} />}
+                {<Button type={'IconText'} icon={isFinished ? 'md-lock' : 'md-play'} title={isFinished ? 'FINISHED' : 'JOIN'} onPress={this.onJoinButtonPressed} />}
+                {<Button type={'IconText'} icon={'md-star'} title={'RANKING'} onPress={this.onRankButtonPressed} />}
             </View>
         );
     }
