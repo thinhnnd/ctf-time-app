@@ -82,16 +82,17 @@ export default function TeamCreationScreen(props) {
     );
 }
 
-// TeamCreationScreen.navigationOptions = {
-//     header: { title: 'Team Creation'}
-// };
+TeamCreationScreen.navigationOptions = {
+    title: 'Team Creation',
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 15,
         color: '#ffffff',
-        backgroundColor: 'rgba(241, 240, 241, 1)'
+        backgroundColor: 'rgba(241, 240, 241, 1)',
+        paddingHorizontal: 10,
     },
     wrapper: {
         marginLeft: 10,

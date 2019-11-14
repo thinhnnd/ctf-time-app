@@ -6,7 +6,7 @@ const initAuthData = {};
 export const AuthProvider = (props) => {
     const [authData, setAuthData] = useState(initAuthData);
     useEffect(() => {
-        console.log('auth context:',authData);
+        // console.log('auth context:',authData);
         
         DATABASE_HELPERS.getUserInfo().then(userString => {
             const user = JSON.parse(userString);
