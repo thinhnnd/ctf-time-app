@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Platform, View, FlatList, Text, Alert } from 'react-native';
+import { ActivityIndicator, StyleSheet, Platform, View, FlatList, Text, Alert, Picker } from 'react-native';
 import { Image, ListItem, Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { withNavigation } from 'react-navigation';
@@ -47,7 +47,8 @@ class ListCTFEvent extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            events: []
+            events: [],
+            orderBy: ''
         }
     }
     componentDidMount() {
@@ -55,7 +56,15 @@ class ListCTFEvent extends React.Component {
         console.log(this.props.events.length);
         this.setState({ isLoading: false, events: events });
     };
-
+    orderByTime = value => {
+        const { events } = this.state;
+        const current = new Date().getTime();
+        if (value === 'available') {
+            const availableEvents = events.filter(event => current < new Date(event.finish).getTime());
+            this.setState({ events: availableEvents });
+        }
+        else this.setState({ events: this.props.events })
+    }
     render() {
         if (this.state.isLoading) {
             return (<View style={{ flex: 1, paddingTop: 20 }}>
@@ -64,6 +73,18 @@ class ListCTFEvent extends React.Component {
         }
         return (
             <View style={styles.MainContainer}>
+                <Picker
+                    style={{ height: 50, width: 100 }}
+                    selectedValue={this.state.orderBy}
+                    style={{ height: 50, width: 100 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                        this.setState({ orderBy: itemValue });
+                        this.orderByTime(itemValue);
+                    }
+                    }>
+                    <Picker.Item label="All events" value="all" />
+                    <Picker.Item label="Available events" value="available" />
+                </Picker>
                 <FlatList
                     data={this.state.events}
                     renderItem={({ item }) => (
@@ -79,7 +100,7 @@ class ListCTFEvent extends React.Component {
         )
     }
 }
-export default  withNavigation(ListCTFEvent);
+export default withNavigation(ListCTFEvent);
 const styles = StyleSheet.create({
     MainContainer: {
         justifyContent: 'center',
