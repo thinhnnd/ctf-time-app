@@ -57,3 +57,24 @@ export const addNewMember = async (token, teamId, userToAdd) => {
         throw new Error(err.response.data.message);   
     }
 }
+
+export const deleteMember = async (token, teamId, userToRemove) => {
+    try {
+        const config = {
+            method: 'put',
+            url: `${url}/${teamId}/remove-member`,
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+            data: {
+                userToRemoveId: userToRemove
+            }
+          }
+        res = await axios(config);
+        return res.data;
+    } 
+    catch (err) {
+        // console.log(err.response);
+        throw new Error(err.response.data.message);   
+    }
+}

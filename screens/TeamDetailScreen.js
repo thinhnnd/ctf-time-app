@@ -7,6 +7,7 @@ import {
     Button,
     Dimensions,
     SafeAreaView,
+    Alert
 } from 'react-native';
 import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
@@ -19,6 +20,7 @@ import API_HELPERS from '../api';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class TeamDetailScreen extends React.Component {
+    static contextType = AuthContext;
     constructor(props) {
         super(props);
         // const evReg = props.team.eventsRegistration;
@@ -47,8 +49,24 @@ export default class TeamDetailScreen extends React.Component {
         }
 
     }
+
+    deleteUserInTeam = async (token, teamId, userId) => {
+        try {
+            await API_HELPERS.deleteMember(token, teamId, userId);
+            Alert.alert('Remove Successfully');
+        } catch (err) {
+            Alert.alert(err.message);
+        }
+    }
+
     renderMembers = (mem, index) => {
         const { full_name, avatar, email, _id } = mem;
+        const { user } = this.context;
+        const { team } = this.state;
+        let delUser;
+        if (user && (user._id = team.leader)) {
+            delUser = <Button titleStyle={{ fontSize: 10 }} title="Remove" onPress={() => this.deleteUserInTeam(user.token, team._id, _id )} />
+        }
         return (
             <ListItem
                 key={index}
@@ -64,8 +82,10 @@ export default class TeamDetailScreen extends React.Component {
                 title={full_name}
                 subtitle={`Email: ${email}`}
                 titleStyle={{
-                    color: _id == this.state.team.leader ? 'red' : 'black'
+                    color: _id ==team.leader ? 'red' : 'black'
                 }}
+
+                rightElement={ (user && team.leader !== _id )? delUser: undefined }
             />
         )
     }
