@@ -20,11 +20,13 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function TeamsList(props) {
     const [isLoading, setIsLoading] = useState(true);
-    const [teams, setTeams] = useState([]);
+    const [teams, setTeams] = useState(props.teams);
 
     // function getAllTeams() {
 
     // }
+
+    // console.log('props.team', props.teams);
 
     fetchData = async () => {
         try {
@@ -38,8 +40,9 @@ export default function TeamsList(props) {
 
     }
     useEffect(() => {
-        fetchData();
-    }, []);
+        // fetchData();
+        setTeams(props.teams)
+    }, [props.teams]);
 
     handleTeamDetail = (team, navigate) => {
         // console.log('event handler', event);
@@ -68,8 +71,8 @@ export default function TeamsList(props) {
         )
     }
 
-    renderListTeams = () => {
-        return teams.map((team, index) => {
+    renderListTeams = (listTeams) => {
+        return listTeams.map((team, index) => {
             return renderTeam(team, index);
         })
     }
@@ -80,7 +83,7 @@ export default function TeamsList(props) {
                 <Text style={styles.nameHeader}>List Teams</Text>
             </View>
             {
-                renderListTeams()
+                renderListTeams(teams)
             }
 
             <View style={styles.navBar}>

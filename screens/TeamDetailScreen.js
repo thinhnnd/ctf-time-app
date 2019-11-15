@@ -115,17 +115,14 @@ export default class TeamDetailScreen extends React.Component {
 
     async componentDidMount() {
         const { team } = this.state;
-        console.log('did mount', team);
         await this.fetchEventsRegistrationData(team.eventsRegistration);
     }
 
     render() {
         const { navigation } = this.props;
         const { eventsReg } = this.state;
-        console.log("eventsRegistration", this.state.eventsReg);
 
         const team = navigation.getParam("team");
-        console.log(team);
 
         return (
 
