@@ -16,8 +16,10 @@ import TeamInfo from '../components/Team/TeamInfo';
 
 import { AuthContext } from '../contexts/auth.context';
 import API_HELPERS from '../api';
+import EventItemMenu from '../components/Shared/EventItemMenu';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
 
 export default class TeamDetailScreen extends React.Component {
     static contextType = AuthContext;
@@ -103,8 +105,13 @@ export default class TeamDetailScreen extends React.Component {
 
     renderJoinedEvent = (eventItem, index) => {
         const { title, logo, grade, _id, event } = eventItem;
+        
         const { user } = this.context;
         const { team } = this.state;
+
+        // const evItem = team.eventsRegistration.filter(evReg => evReg._id == _id);
+        
+        // console.log('include ', team.eventsRegistration.includes(_id));
 
         if (user && (user._id = team.leader) && !grade ) {
             delEvent = <Button 
@@ -125,7 +132,12 @@ export default class TeamDetailScreen extends React.Component {
                 }}
                 title={title}
                 subtitle={`Grade: ${grade}`}
-                rightElement={ (user && team.leader !== _id )? delEvent: undefined }
+                rightElement={ 
+                    (user && team.leader == user._id && user.teams[0] == team._id ) ||
+                     (user && user.role == "admin") ?
+                     <EventItemMenu team={team} event={eventItem} />:
+                      undefined
+                }
             />
         )
     }
