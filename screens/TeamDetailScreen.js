@@ -59,8 +59,18 @@ export default class TeamDetailScreen extends React.Component {
         }
     }
 
+    cancelEvent = async (token, teamId, eventId) => {
+        console.log('token', token, 'teamId', teamId, 'eventId', eventId)
+        try {
+            const res = await API_HELPERS.deleteRegistrationEvent(token, teamId, eventId);
+            Alert.alert('Remove Successfully');
+        } catch (err) {
+            Alert.alert(err.message);
+        }
+    }
+
     renderMembers = (mem, index) => {
-        const { full_name, avatar, email, _id } = mem;
+        const { full_name, avatar, email, _id,  } = mem;
         const { user } = this.context;
         const { team } = this.state;
         let delUser;
@@ -91,9 +101,16 @@ export default class TeamDetailScreen extends React.Component {
     }
 
 
-    renderJoinedEvent = (event, index) => {
-        const { title, logo, grade } = event;
-        console.log('event a', event);
+    renderJoinedEvent = (eventItem, index) => {
+        const { title, logo, grade, _id, event } = eventItem;
+        const { user } = this.context;
+        const { team } = this.state;
+
+        if (user && (user._id = team.leader) && !grade ) {
+            delEvent = <Button 
+            titleStyle={{ fontSize: 10 }} title="Cancel"
+             onPress={() => this.cancelEvent(user.token, team._id, event )} />
+        }
         return (
             <ListItem
                 key={index}
@@ -108,6 +125,7 @@ export default class TeamDetailScreen extends React.Component {
                 }}
                 title={title}
                 subtitle={`Grade: ${grade}`}
+                rightElement={ (user && team.leader !== _id )? delEvent: undefined }
             />
         )
     }
