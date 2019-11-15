@@ -20,9 +20,15 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
 export default function YourTeam(props) {
-    const { team, user, token, navigate } = props;
-    const teams = user.teams;
-    const [teamInfo, setTeam] = useState(team);
+    const { teams, user, token, navigate } = props;
+    console.log('user', !user);
+    let userTeams;
+    if (user) {
+         userTeams = user.teams;
+
+    }
+    const [teamInfo, setTeam] = useState(teams);
+    const [yourTeam, setYourTeam] = useState();
 
 
 
@@ -37,12 +43,36 @@ export default function YourTeam(props) {
         }
     }
 
+    getYourTeam = (teamsList, user) => {
+        const result = teamsList.find((team) => {
+            return team._id == user.teams[0];
+        });
+
+        console.log('team resutl', result)
+        return result;
+    }
+
     useEffect(() => {
+        if(user) {
+            let team = getYourTeam(teams, user);
+            console.log('team', team)
+            setYourTeam(team)
+            console.log('your Team', yourTeam)
+        }
+    }, [teams, user])
 
-    }, [])
+    if(!user) {
+        return (<View style={styles.wrapper}>
+            <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
+            <Button
+                title="Login/Register"
+                onPress={() => navigate('Login', { 'from': 'Team' })}
+            />
+        </View>
+        )
+    }
 
-
-    if (teams.length === 0) {
+    if (userTeams.length === 0) {
         return (
             <View style={{ marginHorizontal: 10}}>
                 <Text style={{ marginBottom: 10}}>You are not a member of any teams, create now?</Text>
@@ -50,7 +80,8 @@ export default function YourTeam(props) {
             </View>
         );
     }
-    if (!teamInfo) {
+
+    if (!yourTeam) {
         return (
             <View>
                 <Text>You are not a member of any teams, create now?</Text>
@@ -73,7 +104,7 @@ export default function YourTeam(props) {
 
         >
             <View style={styles.statusBar} />
-            <TouchableOpacity onPress={() => handleYourTeamDetail(teamInfo, navigate)}>
+            <TouchableOpacity onPress={() => handleYourTeamDetail(yourTeam, navigate)}>
                 <View
                     style={styles.teamInfo}
                 >
@@ -88,12 +119,12 @@ export default function YourTeam(props) {
                             <Avatar
                                 width={145}
                                 height={145}
-                                source={teamInfo.logo && {
-                                    uri: teamInfo.logo,
+                                source={yourTeam.logo && {
+                                    uri: yourTeam.logo,
                                 }}
                                 activeOpacity={0.7}
                                 avatarStyle={{ borderRadius: 145 / 2 }}
-                                title={teamInfo.teamName[0]}
+                                title={yourTeam.teamName[0]}
                                 overlayContainerStyle={{ backgroundColor: 'black' }}
                             />
                         </View>
@@ -119,7 +150,7 @@ export default function YourTeam(props) {
                                         marginLeft: 5,
                                     }}
                                 >
-                                    {teamInfo.teamName}
+                                    {yourTeam.teamName}
                                 </Text>
                             </View>
                         </View>

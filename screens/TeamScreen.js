@@ -22,38 +22,39 @@ import YourTeam from '../components/Team/YourTeam';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-function wait(timeout) {
-    return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-    });
-  }
 
 
-export default function TeamScreen(props) {
-    const [isLoading, setIsLoading] = useState(true);
-    const [refreshing, setRefreshing] = React.useState(false);
+export default class TeamScreen extends React.Component {
+    static contextType = AuthContext;
 
-    const [teams, setTeams] = useState([]);
-    
-    const { user } = useAuthContext();
+    constructor(props) {
+        super(props);
+        // user =  { user } = useAuthContext();
+        this.state = {
+            isLoading: true,
+            refreshing: false,
+            teams: [],
+            yourTeam: null,
+            user: undefined
+        }
+    }
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        fetchData().then(() => setRefreshing(false));;
+    onRefresh() {
+        this.setState({ refreshing: true });
+        this.fetchData().then(() => {
+            console.log('onRefresh', this.state.teams)
+            this.setState({ refreshing: false });
 
-        // wait(2000).then(() => setRefreshing(false));
-      }, [refreshing]);
-
-    // function getAllTeams() {
-
-    // }
+        });
+    }
 
     fetchData = async () => {
         try {
             const result = await API_HELPERS.getAllTeams();
-            setTeams(result);
-            setIsLoading(false);
-
+            this.setState({
+                teams: result,
+                isLoading: false
+            });
         }
         catch (err) {
             console.error(err);
@@ -61,60 +62,53 @@ export default function TeamScreen(props) {
 
     }
 
-    useEffect(() => {
-        fetchData();
-        console.log('context', user);
-
-    }, []);
-
-    if (isLoading) {
-        return (<View style={styles.container, { paddingTop: 20 }}>
-            <ActivityIndicator />
-        </View>)
+    async componentDidMount() {
+        await this.fetchData();
+        const { user } = this.context;
+        this.setState({ user });
     }
 
-    getYourTeam = () => {
-        const result = teams.find( (team) => {
+    getYourTeam = (teamsList, user) => {
+        const result = teamsList.find((team) => {
             return team._id == user.teams[0];
         });
 
         return result;
     }
 
-    return (
-        <ScrollView style={styles.container}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-        >
-            <SafeAreaView
-                style={{ flex: 1 }}
-            >
-                <View style={styles.statusBar} />
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Your Teams</Text>
-                </View>
-                {
-                    !user ?
-                        (<View style={styles.wrapper}>
-                            <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
-                            <Button
-                                title="Login/Register"
-                                onPress={() => props.navigation.navigate('Login', { 'from': 'Team' })}
-                            />
-
-
+    render() {
+        const { navigation } = this.props;
+        let {user} = this.context;
+        const { isLoading, teams, refreshing } = this.state;
+        if (isLoading) {
+            return (<View style={styles.container, { paddingTop: 20 }}>
+                <ActivityIndicator />
+            </View>)
+        }
+        else
+            return (
+                <ScrollView style={styles.container}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh.bind(this)} />
+                    }
+                >
+                    <SafeAreaView
+                        style={{ flex: 1 }}
+                    >
+                        <View style={styles.statusBar} />
+                        <View style={styles.navBar}>
+                            <Text style={styles.nameHeader}>Your Teams</Text>
                         </View>
-                        ) : <YourTeam navigate={props.navigation.navigate} user={user} team={getYourTeam()}  />
-                }
+                        <YourTeam navigate={navigation.navigate} user={user} teams={teams} />
+                        <TeamList navigate={navigation.navigate} teams={teams} />
 
-                <TeamList navigate={props.navigation.navigate} teams={teams} />
+                        <View style={styles.navBar}>
+                        </View>
+                    </SafeAreaView>
+                </ScrollView>
+            );
+    }
 
-                <View style={styles.navBar}>
-                </View>
-            </SafeAreaView>
-        </ScrollView>
-    );
 }
 
 TeamScreen.navigationOptions = {

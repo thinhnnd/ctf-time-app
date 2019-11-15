@@ -16,14 +16,22 @@ export const GetAllRegistrationEvents = async (token) => {
         }
     });
 }
-export const DeleteRegistrationEvent = async (token, data) => {
-    return await axios.delete(url,
-        { data: qs.stringify(data) },
-        {
+export const deleteRegistrationEvent = async (token, teamId, eventId) => {
+    try {
+        const res = await axios.delete(url, {   
             headers: {
                 authorization: 'Bearer ' + token
+            },
+            data: {
+                eventId: eventId,
+                teamId: teamId
             }
-        })
+        });
+        return res;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+
 }
 export const GetRankingOfEvent = async (event) => {
     return await axios.get(url + '/rank?event=' + event)

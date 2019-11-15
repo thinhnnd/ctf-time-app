@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -7,105 +7,194 @@ import {
     Button,
     Dimensions,
     SafeAreaView,
+    Alert
 } from 'react-native';
 import Login from '../components/User/Login';
 import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 import TeamInfo from '../components/Team/TeamInfo';
 
+import { AuthContext } from '../contexts/auth.context';
+import API_HELPERS from '../api';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
-import {AuthContext} from '../contexts/auth.context';
 
+export default class TeamDetailScreen extends React.Component {
+    static contextType = AuthContext;
+    constructor(props) {
+        super(props);
+        // const evReg = props.team.eventsRegistration;
+        const { navigation } = this.props;
+        const team = navigation.getParam("team");
+        this.state = {
+            team: team,
+            eventsReg : []
+        }
+    }
 
+    fetchEventsRegistrationData = async (shortInfoEvents) => {
+        try {
+            const events = await Promise.all(shortInfoEvents.map(async (event) => {
+                let fullInfoEvent = await API_HELPERS.getEvent(event.event);
+                const { title, logo } = fullInfoEvent;
+                return { ...event, title, logo };
 
+            }));
+            this.setState({
+                eventsReg: events,
+            })
+        }
+        catch (err) {
+            Alert.alert(err.message);
+        }
 
-export default function TeamDetailScreen(props) {
-    const team= props.navigation.getParam("team")
+    }
 
+    deleteUserInTeam = async (token, teamId, userId) => {
+        try {
+            await API_HELPERS.deleteMember(token, teamId, userId);
+            Alert.alert('Remove Successfully');
+        } catch (err) {
+            Alert.alert(err.message);
+        }
+    }
 
+    cancelEvent = async (token, teamId, eventId) => {
+        console.log('token', token, 'teamId', teamId, 'eventId', eventId)
+        try {
+            const res = await API_HELPERS.deleteRegistrationEvent(token, teamId, eventId);
+            Alert.alert('Remove Successfully');
+        } catch (err) {
+            Alert.alert(err.message);
+        }
+    }
 
-    function renderMembers(mem, index) {
-        const { full_name, avatar, email, _id } = mem;
+    renderMembers = (mem, index) => {
+        const { full_name, avatar, email, _id,  } = mem;
+        const { user } = this.context;
+        const { team } = this.state;
+        let delUser;
+        if (user && (user._id = team.leader)) {
+            delUser = <Button titleStyle={{ fontSize: 10 }} title="Remove" onPress={() => this.deleteUserInTeam(user.token, team._id, _id )} />
+        }
         return (
             <ListItem
                 key={index}
-                leftAvatar={{ 
+                leftAvatar={{
                     source: avatar && { uri: avatar },
                     title: full_name[0]
                 }}
-                containerStyle={{ 
+                containerStyle={{
                     marginHorizontal: 10,
                     marginTop: 10,
-                    borderRadius:5
+                    borderRadius: 5
                 }}
                 title={full_name}
-                subtitle= {`Email: ${email}`}
+                subtitle={`Email: ${email}`}
                 titleStyle={{
-                    color: _id == team.leader ? 'red' : 'black' 
+                    color: _id ==team.leader ? 'red' : 'black'
                 }}
+
+                rightElement={ (user && team.leader !== _id )? delUser: undefined }
             />
         )
     }
-    
-    
-    function renderJoinedEvent(user, index) {
-        const { name, avatar, value } = user;
+
+
+    renderJoinedEvent = (eventItem, index) => {
+        const { title, logo, grade, _id, event } = eventItem;
+        const { user } = this.context;
+        const { team } = this.state;
+
+        if (user && (user._id = team.leader) && !grade ) {
+            delEvent = <Button 
+            titleStyle={{ fontSize: 10 }} title="Cancel"
+             onPress={() => this.cancelEvent(user.token, team._id, event )} />
+        }
         return (
             <ListItem
                 key={index}
-                leftAvatar={{ source: { uri: avatar } }}
-                containerStyle={{ 
+                leftAvatar={{
+                    source: logo && { uri: logo },
+                    title: title[0]
+                }}
+                containerStyle={{
                     marginHorizontal: 10,
                     marginTop: 10,
-                    borderRadius:5,
+                    borderRadius: 5,
                 }}
-                title={name}
-                subtitle= {`Grade: ${value}`}
+                title={title}
+                subtitle={`Grade: ${grade}`}
+                rightElement={ (user && team.leader !== _id )? delEvent: undefined }
             />
         )
     }
-    
+
     renderListMembers = (members) => {
         return members.map((mems, index) => {
-            return renderMembers(mems, index);
+            return this.renderMembers(mems, index);
         })
     }
-    
+
     renderListEvents = (events) => {
         return events.map((events, index) => {
-            return renderJoinedEvent(events, index);
+            return this.renderJoinedEvent(events, index);
         })
     }
 
-    // const { team } = props;
-    const navigation=props.navigation
-    return (
-        
-        <ScrollView style={styles.container}>
-            <SafeAreaView
-                style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
-            >
-                <View style={styles.statusBar} />
+    // componentWillMount() {
+    //     const evReg = this.props.team.eventsRegistration;
+    //     console.log('props team evReg', evReg)
+    //     this.setState({ 
+    //         eventsRegistration: evReg
+    //     })
+    // }
 
-                <TeamInfo navigate={props.navigation.navigate} team={ team } />
 
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Members</Text>
-                </View>
-                {
-                    renderListMembers(team.members)
-                }
+    async componentDidMount() {
+        const { team } = this.state;
+        await this.fetchEventsRegistrationData(team.eventsRegistration);
+    }
 
-                <View style={styles.navBar}>
-                    <Text style={styles.nameHeader}>Events Joined</Text>
-                </View>
+    render() {
+        const { navigation } = this.props;
+        const { eventsReg } = this.state;
 
-                <View style={styles.navBar}>
-                </View>
+        const team = navigation.getParam("team");
 
-            </SafeAreaView>
-        </ScrollView>
-    );
+        return (
+
+            <ScrollView style={styles.container}>
+                <SafeAreaView
+                    style={{ flex: 1, backgroundColor: 'rgba(241, 240, 241, 1)' }}
+                >
+                    <View style={styles.statusBar} />
+
+                    <TeamInfo navigate={this.props.navigation.navigate} team={team} />
+
+                    <View style={styles.navBar}>
+                        <Text style={styles.nameHeader}>Members</Text>
+                    </View>
+                    {
+                        this.renderListMembers(team.members)
+                    }
+
+                    <View style={styles.navBar}>
+                        <Text style={styles.nameHeader}>Events Joined</Text>
+                    </View>
+
+                    {
+                        this.state.eventsReg.length > 0 ? this.renderListEvents(eventsReg): null
+                    }
+
+                    <View style={styles.navBar}>
+                    </View>
+
+                </SafeAreaView>
+            </ScrollView>
+        );
+    }
+
 }
 
 TeamDetailScreen.navigationOptions = ({ navigation }) => {

@@ -4,7 +4,6 @@ const url = `${CONFIG.devURL}/users`;
 
 export const getUsersHaveNoTeam = async (token) => {
     try {
-        console.log('token ', token);
         const users = await axios.get(`${url}?filter=no-team`, {
             headers: {
                 authorization: `Bearer ${token}`,
