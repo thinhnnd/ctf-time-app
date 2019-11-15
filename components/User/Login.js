@@ -34,6 +34,7 @@ export default class Login extends Component {
         return reg.test(email);
     }
     onLogin = async () => {
+        
         const { email, password } = this.state;
         if (!email || !password || password.length < 6 || !this.validateEmail(email)) {
             Alert.alert('Invalid credentials', 'Please enter a valid email and password');
@@ -41,7 +42,8 @@ export default class Login extends Component {
         }
         const { navigation } = this.props;
         this.setState({ isPressed: true });
-        API_HELPERS.login(email, password).then((res) => {
+        try {
+            const res = await API_HELPERS.login(email, password);
             const { data } = res;
             if (data.token) {
                 this.context.onLogin(data);
@@ -50,10 +52,15 @@ export default class Login extends Component {
                 from ? navigation.navigate(from) : void 0;
             }
 
-        }).catch((err) => {
-            // console.log(err);
-            Alert.alert(err, err.response.data.message);
-        })
+        }
+        catch (err) {
+            console.log(err);
+
+            Alert.alert(err.message);
+            this.setState({ isPressed: false });
+
+
+        }
     }
 
     async saveUserData(token) {
