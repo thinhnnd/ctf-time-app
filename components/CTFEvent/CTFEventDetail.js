@@ -95,7 +95,7 @@ export default class CTFEventDetail extends Component {
                     () => {
                         Alert.alert('Can\'t join event', this.state.warningText, [
                             { text: 'Later', onPress: () => console.log('Later') },
-                            { text: 'OK', onPress: () => console.log('OK, create a team') }
+                            { text: 'OK', onPress: () => this.props.navigation.navigate('TeamCreation') }
                         ], { cancelable: true });
                     });
             }

@@ -14,7 +14,7 @@ import Login from '../components/User/Login';
 import { Input } from 'react-native-elements';
 import { Button as ButtonRNE } from 'react-native-elements';
 
-import {useAuthContext} from '../contexts/auth.context';
+import { useAuthContext } from '../contexts/auth.context';
 
 import API_HELPERS from '../api'
 
@@ -22,21 +22,21 @@ import API_HELPERS from '../api'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function TeamCreationScreen(props) {
-    const { user } = useAuthContext(); 
-    const [nameInput, setNameInput ] = useState('');
+    const { user } = useAuthContext();
+    const [nameInput, setNameInput] = useState('');
 
-    async function  handleCreateTeam(teamName) {
+    async function handleCreateTeam(teamName) {
         const { token } = user;
-        const team= props.navigation.getParam("team")
+        const team = props.navigation.getParam("team")
 
         // console.log(team);
         teamName = teamName.trim();
-        API_HELPERS.createNewTeam(token, teamName).then( (res)=> {
+        API_HELPERS.createNewTeam(token, teamName).then((res) => {
             console.log('res', res);
-            Alert.alert(res.response.data.message);
-        }).catch( err => {
-            // console.log('err handle createTeam', err);
-            Alert.alert('Notice', err.message);
+            Alert.alert(res.data.message);
+        }).catch(err => {
+            console.log('err handle createTeam', err);
+            Alert.alert('Error', err.response.data.message);
         })
         // try {
         //     res = await API_HELPERS.createNewTeam(token, teamName);
@@ -55,26 +55,26 @@ export default function TeamCreationScreen(props) {
             >
                 <View style={styles.statusBar} />
 
-                
-                <View style={{ 
-                    backgroundColor: '#fff', 
+
+                <View style={{
+                    backgroundColor: '#fff',
                     paddingVertical: 15,
-                     paddingHorizontal: 10, 
-                     borderRadius: 5,
-                      marginBottom: 10
-                     }}>
-                    <Text style={{                      
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                    marginBottom: 10
+                }}>
+                    <Text style={{
                         marginBottom: 10
                     }}>
                         Team name
                     </Text>
-                    <Input containerStyle={{                      
+                    <Input containerStyle={{
                         marginBottom: 10
-                    }} 
-                    onChangeText={ (value) => { 
-                        setNameInput(value) 
-                    }} />
-                    <Button title="Submit" onPress={ () => handleCreateTeam(nameInput) } />
+                    }}
+                        onChangeText={(value) => {
+                            setNameInput(value)
+                        }} />
+                    <Button title="Submit" onPress={() => handleCreateTeam(nameInput)} />
                 </View>
 
             </SafeAreaView>

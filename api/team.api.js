@@ -15,26 +15,18 @@ export const getTeamDetails = async (id, token) => {
     return team.data;
 }
 export const createNewTeam = async (token, teamName) => {
-    try {
-        const config = {
-            method: 'post',
-            url: `${url}`,
-            headers: {
-                authorization: `Bearer ${token}`,
-            },
-            data: {
-                teamName: teamName
-            }
-          }
-        res = await axios(config);
-        return res.data;
+    const config = {
+        method: 'post',
+        url: `${url}`,
+        headers: {
+            authorization: `Bearer ${token}`,
+        },
+        data: {
+            teamName: teamName
+        }
     }
-    catch (err) {
-        let shortErr = new Error();
-        // shortErr.
-        // console.log('createTeam', err.response);
-        throw new Error(err.response.data.message);   
-     }
+    const res = await axios(config);
+    return res;
 }
 
 export const addNewMember = async (token, teamId, userToAdd) => {
@@ -48,13 +40,13 @@ export const addNewMember = async (token, teamId, userToAdd) => {
             data: {
                 member: userToAdd
             }
-          }
+        }
         res = await axios(config);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -69,13 +61,13 @@ export const deleteMember = async (token, teamId, userToRemove) => {
             data: {
                 userToRemoveId: userToRemove
             }
-          }
+        }
         res = await axios(config);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -91,12 +83,12 @@ export const updateScore = async (token, teamId, eventId, score) => {
                 grade: grade,
                 eventId: eventId
             }
-          }
+        }
         res = await axios(config);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
