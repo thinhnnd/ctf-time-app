@@ -17,6 +17,7 @@ import TeamInfo from '../components/Team/TeamInfo';
 import { AuthContext } from '../contexts/auth.context';
 import API_HELPERS from '../api';
 import EventItemMenu from '../components/Shared/EventItemMenu';
+import GradeAsking from '../components/Shared/GradeAsking';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -135,7 +136,7 @@ export default class TeamDetailScreen extends React.Component {
                 rightElement={ 
                     (user && team.leader == user._id && user.teams[0] == team._id ) ||
                      (user && user.role == "admin") ?
-                     <EventItemMenu team={team} event={eventItem} />:
+                     <EventItemMenu style={{marginLeft: 20}} team={team} event={eventItem} />:
                       undefined
                 }
             />
@@ -161,6 +162,7 @@ export default class TeamDetailScreen extends React.Component {
     //         eventsRegistration: evReg
     //     })
     // }
+
 
 
     async componentDidMount() {
@@ -201,6 +203,7 @@ export default class TeamDetailScreen extends React.Component {
 
                     <View style={styles.navBar}>
                     </View>
+
 
                 </SafeAreaView>
             </ScrollView>

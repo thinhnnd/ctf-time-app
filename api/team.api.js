@@ -79,7 +79,10 @@ export const deleteMember = async (token, teamId, userToRemove) => {
     }
 }
 
-export const updateScore = async (token, teamId, eventId, score) => {
+export const updateScore = async (token, teamId, eventId, grade) => {
+    console.log('token', token);
+    console.log('teamId', teamId);
+    console.log(eventId, ' grade', grade);
     try {
         const config = {
             method: 'put',
@@ -93,6 +96,7 @@ export const updateScore = async (token, teamId, eventId, score) => {
             }
           }
         res = await axios(config);
+        console.log(res);
         return res.data;
     } 
     catch (err) {
