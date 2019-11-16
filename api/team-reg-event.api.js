@@ -17,9 +17,6 @@ export const GetAllRegistrationEvents = async (token) => {
     });
 }
 export const deleteRegistrationEvent = async (token, teamId, eventId) => {
-    console.log(token);
-    console.log(teamId);
-    console.log(eventId);
     try {
         const res = await axios.delete(url, {   
             headers: {
@@ -30,7 +27,6 @@ export const deleteRegistrationEvent = async (token, teamId, eventId) => {
                 teamId: teamId
             }
         });
-        console.log('res ', res);
         return res;
     } catch (err) {
         throw new Error(err.response.data.message);

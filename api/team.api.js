@@ -1,5 +1,6 @@
 import axios from 'axios';
 import CONFIG from './config';
+import qs from 'qs';
 const url = `${CONFIG.devURL}/teams`;
 export const getAllTeams = async () => {
     const teams = await axios.get(url);
@@ -15,18 +16,13 @@ export const getTeamDetails = async (id, token) => {
     return team.data;
 }
 export const createNewTeam = async (token, teamName) => {
-    const config = {
-        method: 'post',
-        url: `${url}`,
+    return await axios.post(url, qs.stringify({ 'teamName': teamName, members: [] }), {
         headers: {
             authorization: `Bearer ${token}`,
-        },
-        data: {
-            teamName: teamName
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
         }
-    }
-    const res = await axios(config);
-    return res;
+    })
 }
 
 export const addNewMember = async (token, teamId, userToAdd) => {
