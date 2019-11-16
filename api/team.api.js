@@ -1,5 +1,6 @@
 import axios from 'axios';
 import CONFIG from './config';
+import qs from 'qs';
 const url = `${CONFIG.devURL}/teams`;
 export const getAllTeams = async () => {
     const teams = await axios.get(url);
@@ -15,26 +16,13 @@ export const getTeamDetails = async (id, token) => {
     return team.data;
 }
 export const createNewTeam = async (token, teamName) => {
-    try {
-        const config = {
-            method: 'post',
-            url: `${url}`,
-            headers: {
-                authorization: `Bearer ${token}`,
-            },
-            data: {
-                teamName: teamName
-            }
-          }
-        res = await axios(config);
-        return res.data;
-    }
-    catch (err) {
-        let shortErr = new Error();
-        // shortErr.
-        // console.log('createTeam', err.response);
-        throw new Error(err.response.data.message);   
-     }
+    return await axios.post(url, qs.stringify({ 'teamName': teamName, members: [] }), {
+        headers: {
+            authorization: `Bearer ${token}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+        }
+    })
 }
 
 export const addNewMember = async (token, teamId, userToAdd) => {
@@ -48,13 +36,13 @@ export const addNewMember = async (token, teamId, userToAdd) => {
             data: {
                 member: userToAdd
             }
-          }
+        }
         res = await axios(config);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -69,13 +57,13 @@ export const deleteMember = async (token, teamId, userToRemove) => {
             data: {
                 userToRemoveId: userToRemove
             }
-          }
+        }
         res = await axios(config);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -94,13 +82,13 @@ export const updateScore = async (token, teamId, eventId, grade) => {
                 grade: grade,
                 eventId: eventId
             }
-          }
+        }
         res = await axios(config);
         console.log(res);
         return res.data;
-    } 
+    }
     catch (err) {
         // console.log(err.response);
-        throw new Error(err.response.data.message);   
+        throw new Error(err.response.data.message);
     }
 }
