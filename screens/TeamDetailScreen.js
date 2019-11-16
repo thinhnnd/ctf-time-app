@@ -9,15 +9,12 @@ import {
     SafeAreaView,
     Alert
 } from 'react-native';
-import Login from '../components/User/Login';
-import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
-import { Button as ButtonRNE } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import TeamInfo from '../components/Team/TeamInfo';
 
 import { AuthContext } from '../contexts/auth.context';
 import API_HELPERS from '../api';
 import EventItemMenu from '../components/Shared/EventItemMenu';
-import GradeAsking from '../components/Shared/GradeAsking';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -29,10 +26,27 @@ export default class TeamDetailScreen extends React.Component {
         // const evReg = props.team.eventsRegistration;
         const { navigation } = this.props;
         const team = navigation.getParam("team");
+        let fetching = navigation.getParam("fetching")
         this.state = {
             team: team,
-            eventsReg: []
+            eventsReg: [],
+            fetching: fetching
         }
+    }
+
+    fetchTeam = async () => {
+        try {
+            const { user } = this.context;
+            let teamDetail = await API_HELPERS.getTeamDetails(user.token, this.state.team._id);
+            console.log('teamDetail', teamDetail);
+            this.setState({
+                team: teamDetail
+            })
+
+        } catch (err) {
+            console.log(err);   
+        }
+
     }
 
     fetchEventsRegistrationData = async (shortInfoEvents) => {
@@ -57,16 +71,27 @@ export default class TeamDetailScreen extends React.Component {
         try {
             await API_HELPERS.deleteMember(token, teamId, userId);
             Alert.alert('Remove Successfully');
+
+            const fetchTeams = this.props.navigation.getParam("fetchTeamsData");
+            fetchTeams();
+            this.fetchTeam();
+
         } catch (err) {
             Alert.alert(err.message);
         }
     }
 
     cancelEvent = async (token, teamId, eventId) => {
-        console.log('token', token, 'teamId', teamId, 'eventId', eventId)
+        // console.log('token', token, 'teamId', teamId, 'eventId', eventId)
         try {
             const res = await API_HELPERS.deleteRegistrationEvent(token, teamId, eventId);
             Alert.alert('Remove Successfully');
+            const { team } = this.state;
+
+            await this.fetchEventsRegistrationData(team.eventsRegistration);
+            fetchTeams();
+            this.fetchTeam();
+
         } catch (err) {
             Alert.alert(err.message);
         }
@@ -76,6 +101,8 @@ export default class TeamDetailScreen extends React.Component {
         const { full_name, avatar, email, _id, } = mem;
         const { user } = this.context;
         const { team } = this.state;
+        // console.log('user', user);
+        // console.log('team', team);
         let delUser;
         if (user && (user._id = team.leader)) {
             delUser = <Button titleStyle={{ fontSize: 10 }} title="Remove" onPress={() => this.deleteUserInTeam(user.token, team._id, _id)} />
@@ -167,14 +194,15 @@ export default class TeamDetailScreen extends React.Component {
 
     async componentDidMount() {
         const { team } = this.state;
+
         await this.fetchEventsRegistrationData(team.eventsRegistration);
     }
 
     render() {
         const { navigation } = this.props;
-        const { eventsReg } = this.state;
+        const { eventsReg, team } = this.state;
 
-        const team = navigation.getParam("team");
+        // const team = navigation.getParam("team");
 
         return (
 
@@ -184,7 +212,7 @@ export default class TeamDetailScreen extends React.Component {
                 >
                     <View style={styles.statusBar} />
 
-                    <TeamInfo navigate={this.props.navigation.navigate} team={team} />
+                    <TeamInfo fetchTeam={this.fetchTeam} navigate={this.props.navigation.navigate} team={team} />
 
                     <View style={styles.navBar}>
                         <Text style={styles.nameHeader}>Members</Text>
@@ -223,10 +251,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 15,
         color: '#ffffff',
-    },
-    wrapper: {
-        marginLeft: 15,
-        marginRight: 15
     },
     statusBar: {
         height: 10,

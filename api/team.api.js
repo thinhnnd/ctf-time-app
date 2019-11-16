@@ -6,14 +6,20 @@ export const getAllTeams = async () => {
     const teams = await axios.get(url);
     return teams.data;
 }
-export const getTeamDetails = async (id, token) => {
-    const team = await axios.get(`${url}/${id}`, {
-        headers: {
-            authorization: `Bearer ${token}`,
-        }
-    });
-    // console.log('team', team.data);
-    return team.data;
+export const getTeamDetails = async (token, id) => {
+    try {
+        // console.log(id, '   ',  token)
+        const team = await axios.get(`${url}/${id}`, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            }
+        });
+        // console.log('team', team.data);
+        return team.data;
+    } catch (err) {
+        return new Error(err.response.data.message);
+    }
+
 }
 export const createNewTeam = async (token, teamName) => {
     return await axios.post(url, qs.stringify({ 'teamName': teamName, members: [] }), {
@@ -68,9 +74,9 @@ export const deleteMember = async (token, teamId, userToRemove) => {
 }
 
 export const updateScore = async (token, teamId, eventId, grade) => {
-    console.log('token', token);
-    console.log('teamId', teamId);
-    console.log(eventId, ' grade', grade);
+    // console.log('token', token);
+    // console.log('teamId', teamId);
+    // console.log(eventId, ' grade', grade);
     try {
         const config = {
             method: 'put',

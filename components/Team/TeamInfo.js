@@ -18,7 +18,7 @@ import { AuthContext, useAuthContext } from '../../contexts/auth.context'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
-export default function TeamScreen(props) {
+export default function TeamInfo(props) {
     const { user } = useAuthContext();
     // console.log(user);
     const { team } = props;
@@ -95,7 +95,11 @@ export default function TeamScreen(props) {
                         marginVertical: 10
                     }} />
                     {
-                        user && (team.leader == user._id) ? <ManagementButton navigate={props.navigate} user={user} team={props.team} /> : <></>
+                        console.log('team info', user && (team.leader == user._id))
+
+                    }
+                    {
+                        user && (team.leader == user._id) ? <ManagementButton fetchTeam={props.fetchTeam} navigate={props.navigate} user={user} team={props.team} /> : <></>
                     }
                 </View>
             </View>

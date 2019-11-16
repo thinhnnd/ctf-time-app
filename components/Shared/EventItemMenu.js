@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { AuthContext } from '../../contexts/auth.context';
 import API_HELPERS from '../../api';
@@ -110,7 +110,6 @@ class EventItemMenu extends React.PureComponent {
             <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}}>
                 <Menu
                     ref={this.setMenuRef}
-                    style={{textAlign: 'right'}}
                     button={
                         <Icon onPress={this.showMenu} name="more-vert" type="material" /> }
                 >

@@ -248,10 +248,6 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         color: '#ffffff',
     },
-    wrapper: {
-        marginLeft: 15,
-        marginRight: 15
-    },
     statusBar: {
         height: 10,
     },

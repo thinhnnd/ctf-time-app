@@ -53,7 +53,7 @@ class ListCTFEvent extends React.Component {
     }
     componentDidMount() {
         const { events } = this.props;
-        console.log(this.props.events.length);
+        // console.log(this.props.events.length);
         this.setState({ isLoading: false, events: events });
     };
     orderByTime = value => {

@@ -1,19 +1,8 @@
 import React from 'react';
 import {
-    ScrollView,
-    StyleSheet,
     View,
-    Text,
     Button,
-    Dimensions,
-    SafeAreaView,
 } from 'react-native';
-// import Login from '../components/User/Login';
-import { Card, ListItem, Icon, Avatar } from 'react-native-elements';
-import { Button as ButtonRNE } from 'react-native-elements';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-
 
 
 
@@ -30,7 +19,7 @@ export default function ManagementButton(props) {
         >
             <View style={{ flex: 1, alignItems: 'center' }}>
                 <Button
-                    title="Add User"
+                    title="Add Member"
                     buttonStyle={{
                         height: 33,
                         width: 120,
@@ -43,7 +32,7 @@ export default function ManagementButton(props) {
                         color: 'white'
                     }}
 
-                    onPress={ () => props.navigate('TeamManagement', { team: team})}
+                    onPress={ () => props.navigate('TeamManagement', { team: team, fetchTeam: props.fetchTeam})}
                 />
             </View>
         </View>

@@ -35,14 +35,15 @@ export default class TeamScreen extends React.Component {
             refreshing: false,
             teams: [],
             yourTeam: null,
-            user: undefined
+            user: undefined,
+            fetching: false
         }
     }
 
     onRefresh() {
         this.setState({ refreshing: true });
         this.fetchData().then(() => {
-            console.log('onRefresh', this.state.teams)
+            // console.log('onRefresh', this.state.teams)
             this.setState({ refreshing: false });
 
         });
@@ -50,9 +51,13 @@ export default class TeamScreen extends React.Component {
 
     fetchData = async () => {
         try {
+            this.setState({
+                fetching: true
+            })
             const result = await API_HELPERS.getAllTeams();
             this.setState({
                 teams: result,
+                fetching: false,
                 isLoading: false
             });
         }
@@ -99,8 +104,8 @@ export default class TeamScreen extends React.Component {
                         <View style={styles.navBar}>
                             <Text style={styles.nameHeader}>Your Teams</Text>
                         </View>
-                        <YourTeam navigate={navigation.navigate} user={user} teams={teams} />
-                        <TeamList navigate={navigation.navigate} teams={teams} />
+                        <YourTeam fetching={this.state.fetching} fetchTeamsData={this.fetchData} navigate={navigation.navigate} user={user} teams={teams} />
+                        <TeamList fetching={this.state.fetching} fetchTeamsData={this.fetchData} navigate={navigation.navigate} teams={teams} />
 
                         <View style={styles.navBar}>
                         </View>

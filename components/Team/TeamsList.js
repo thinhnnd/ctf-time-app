@@ -47,7 +47,12 @@ export default function TeamsList(props) {
     handleTeamDetail = (team, navigate) => {
         // console.log('event handler', event);
 
-        navigate('TeamDetail', { team: team, title: team.teamName });
+        navigate('TeamDetail', { 
+            team: team, 
+            title: team.teamName,
+            fetchTeamsData: props.fetchTeamsData,
+            fetching: props.fetching
+         });
     }
 
     renderTeam = (team, index) => {
@@ -99,10 +104,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 15,
         color: '#ffffff',
-    },
-    wrapper: {
-        marginLeft: 15,
-        marginRight: 15
     },
     statusBar: {
         height: 10,

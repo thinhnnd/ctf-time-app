@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    ScrollView,
     StyleSheet,
     View,
     Text,
@@ -48,14 +47,14 @@ export default function YourTeam(props) {
             return team._id == user.teams[0];
         });
 
-        console.log('team resutl', result)
+        // console.log('team resutl', result)
         return result;
     }
 
     useEffect(() => {
         if (user) {
             let team = getYourTeam(teams, user);
-            console.log('team', team)
+            // console.log('team', team)
             setYourTeam(team)
             console.log('your Team', yourTeam)
         }
@@ -95,7 +94,11 @@ export default function YourTeam(props) {
         // console.log('event handler', event);
         // console.log('press')
 
-        navigate('TeamDetail', { team: team, title: team.teamName });
+        navigate('TeamDetail', { 
+            team: team, 
+            title: team.teamName,
+            fetchTeamsData: props.fetchTeamsData
+         });
     }
 
     return (

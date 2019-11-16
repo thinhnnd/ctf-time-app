@@ -40,7 +40,7 @@ export default function TeamManagementScreen(props) {
     }
 
     useEffect( () => {
-        console.log('Team managemet')
+        // console.log('Team managemet')
         fetchUsersData(user.token);
     }, [])
 
@@ -68,7 +68,9 @@ export default function TeamManagementScreen(props) {
             await API_HELPERS.addNewMember(token, teamId, userIdOrEmail);
             fetchUsersData(token);
             Alert.alert('Add member successfully');
-
+            const fetchTeam = props.navigation.getParam("fetchTeam");
+            console.log("fetchTeam", fetchTeam);
+            fetchTeam();
         }
         catch (err) {
             if(err.message.indexOf("Cast to ObjectId failed for value") == 0) {
