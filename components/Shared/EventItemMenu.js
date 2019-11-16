@@ -44,6 +44,7 @@ class EventItemMenu extends React.PureComponent {
 
             }
             Alert.alert('Cancel Successfully');
+            this.props.fetchTeam();
 
 
         } catch (err) {
@@ -70,10 +71,11 @@ class EventItemMenu extends React.PureComponent {
             const res = await API_HELPERS.updateScore(user.token, team._id, event.event, score);
             if(res) {
                 Alert.alert('Successfully update');
+                this.props.fetchTeam();
+
             } else {
                 Alert.alert('Error', 'Failed to update, contact support');
             }
-            console.log(' Update grade ');
         } catch (err) {
             Alert.alert('Error ',err.message);
         }

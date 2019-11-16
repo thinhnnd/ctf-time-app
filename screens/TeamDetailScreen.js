@@ -38,10 +38,16 @@ export default class TeamDetailScreen extends React.Component {
         try {
             const { user } = this.context;
             let teamDetail = await API_HELPERS.getTeamDetails(user.token, this.state.team._id);
-            console.log('teamDetail', teamDetail);
             this.setState({
                 team: teamDetail
-            })
+            });
+
+            const { team } = this.state;
+
+            await this.fetchEventsRegistrationData(team.eventsRegistration);
+
+            // console.log('teamDetail', this.state.team);
+
 
         } catch (err) {
             console.log(err);   
@@ -86,9 +92,6 @@ export default class TeamDetailScreen extends React.Component {
         try {
             const res = await API_HELPERS.deleteRegistrationEvent(token, teamId, eventId);
             Alert.alert('Remove Successfully');
-            const { team } = this.state;
-
-            await this.fetchEventsRegistrationData(team.eventsRegistration);
             fetchTeams();
             this.fetchTeam();
 
@@ -163,7 +166,7 @@ export default class TeamDetailScreen extends React.Component {
                 rightElement={
                     (user && team.leader == user._id && user.teams[0] == team._id) ||
                         (user && user.role == "admin") ?
-                        <EventItemMenu team={team} event={eventItem} /> :
+                        <EventItemMenu fetchTeam={this.fetchTeam} team={team} event={eventItem} /> :
                         undefined
                 }
             />

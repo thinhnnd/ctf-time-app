@@ -90,7 +90,7 @@ export const updateScore = async (token, teamId, eventId, grade) => {
             }
         }
         res = await axios(config);
-        console.log(res);
+        // console.log(res);
         return res.data;
     }
     catch (err) {
