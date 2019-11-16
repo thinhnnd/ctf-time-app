@@ -30,7 +30,7 @@ export default class TeamDetailScreen extends React.Component {
         const team = navigation.getParam("team");
         this.state = {
             team: team,
-            eventsReg : []
+            eventsReg: []
         }
     }
 
@@ -72,18 +72,18 @@ export default class TeamDetailScreen extends React.Component {
     }
 
     renderMembers = (mem, index) => {
-        const { full_name, avatar, email, _id,  } = mem;
+        const { full_name, avatar, email, _id, } = mem;
         const { user } = this.context;
         const { team } = this.state;
         let delUser;
         if (user && (user._id = team.leader)) {
-            delUser = <Button titleStyle={{ fontSize: 10 }} title="Remove" onPress={() => this.deleteUserInTeam(user.token, team._id, _id )} />
+            delUser = <Button titleStyle={{ fontSize: 10 }} title="Remove" onPress={() => this.deleteUserInTeam(user.token, team._id, _id)} />
         }
         return (
             <ListItem
                 key={index}
                 leftAvatar={{
-                    source: avatar && { uri: avatar },
+                    source: avatar && { uri: avatar } || require('../assets/images/user-default.png'),
                     title: full_name[0]
                 }}
                 containerStyle={{
@@ -94,10 +94,10 @@ export default class TeamDetailScreen extends React.Component {
                 title={full_name}
                 subtitle={`Email: ${email}`}
                 titleStyle={{
-                    color: _id ==team.leader ? 'red' : 'black'
+                    color: _id == team.leader ? 'red' : 'black'
                 }}
 
-                rightElement={ (user && team.leader !== _id )? delUser: undefined }
+                rightElement={(user && team.leader !== _id) ? delUser : undefined}
             />
         )
     }
@@ -105,18 +105,18 @@ export default class TeamDetailScreen extends React.Component {
 
     renderJoinedEvent = (eventItem, index) => {
         const { title, logo, grade, _id, event } = eventItem;
-        
+
         const { user } = this.context;
         const { team } = this.state;
 
         // const evItem = team.eventsRegistration.filter(evReg => evReg._id == _id);
-        
+
         // console.log('include ', team.eventsRegistration.includes(_id));
 
-        if (user && (user._id = team.leader) && !grade ) {
-            delEvent = <Button 
-            titleStyle={{ fontSize: 10 }} title="Cancel"
-             onPress={() => this.cancelEvent(user.token, team._id, event )} />
+        if (user && (user._id = team.leader) && !grade) {
+            delEvent = <Button
+                titleStyle={{ fontSize: 10 }} title="Cancel"
+                onPress={() => this.cancelEvent(user.token, team._id, event)} />
         }
         return (
             <ListItem
@@ -132,11 +132,11 @@ export default class TeamDetailScreen extends React.Component {
                 }}
                 title={title}
                 subtitle={`Grade: ${grade}`}
-                rightElement={ 
-                    (user && team.leader == user._id && user.teams[0] == team._id ) ||
-                     (user && user.role == "admin") ?
-                     <EventItemMenu team={team} event={eventItem} />:
-                      undefined
+                rightElement={
+                    (user && team.leader == user._id && user.teams[0] == team._id) ||
+                        (user && user.role == "admin") ?
+                        <EventItemMenu team={team} event={eventItem} /> :
+                        undefined
                 }
             />
         )
@@ -196,7 +196,7 @@ export default class TeamDetailScreen extends React.Component {
                     </View>
 
                     {
-                        this.state.eventsReg.length > 0 ? this.renderListEvents(eventsReg): null
+                        this.state.eventsReg.length > 0 ? this.renderListEvents(eventsReg) : null
                     }
 
                     <View style={styles.navBar}>

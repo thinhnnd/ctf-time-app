@@ -24,7 +24,7 @@ export default function YourTeam(props) {
     console.log('user', !user);
     let userTeams;
     if (user) {
-         userTeams = user.teams;
+        userTeams = user.teams;
 
     }
     const [teamInfo, setTeam] = useState(teams);
@@ -53,7 +53,7 @@ export default function YourTeam(props) {
     }
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             let team = getYourTeam(teams, user);
             console.log('team', team)
             setYourTeam(team)
@@ -61,7 +61,7 @@ export default function YourTeam(props) {
         }
     }, [teams, user])
 
-    if(!user) {
+    if (!user) {
         return (<View style={styles.wrapper}>
             <Text style={{ marginBottom: 10 }}>Login to manage your team</Text>
             <Button
@@ -74,9 +74,9 @@ export default function YourTeam(props) {
 
     if (userTeams.length === 0) {
         return (
-            <View style={{ marginHorizontal: 10}}>
-                <Text style={{ marginBottom: 10}}>You are not a member of any teams, create now?</Text>
-                <ButtonRNE title="CREATE TEAM" onPress={ () => props.navigate('TeamCreation')} />
+            <View style={{ marginHorizontal: 10 }}>
+                <Text style={{ marginBottom: 10 }}>You are not a member of any teams, create now?</Text>
+                <ButtonRNE title="CREATE TEAM" onPress={() => props.navigate('TeamCreation')} />
             </View>
         );
     }
@@ -85,7 +85,7 @@ export default function YourTeam(props) {
         return (
             <View>
                 <Text>You are not a member of any teams, create now?</Text>
-                <ButtonRNE title="CREATE TEAM" onPress={ () => props.navigate('TeamCreation')} />
+                <ButtonRNE title="CREATE TEAM" onPress={() => props.navigate('TeamCreation')} />
             </View>
         )
     }
@@ -121,7 +121,7 @@ export default function YourTeam(props) {
                                 height={145}
                                 source={yourTeam.logo && {
                                     uri: yourTeam.logo,
-                                }}
+                                } || { uri: 'https://www.precisionpass.co.uk/wp-content/uploads/2018/03/default-team-logo.png' }}
                                 activeOpacity={0.7}
                                 avatarStyle={{ borderRadius: 145 / 2 }}
                                 title={yourTeam.teamName[0]}
